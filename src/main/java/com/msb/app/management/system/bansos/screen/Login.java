@@ -5,6 +5,10 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
+import com.msb.app.management.system.bansos.helper.Security;
+
+
+
 /**
  *
  * @author mac
@@ -17,6 +21,7 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,6 +45,11 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setText("password");
 
         jButton1.setText("Login");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -93,12 +103,22 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+      Security security = new Security();
+      try{
+          security.login(this.jTextField1.getText(), String.valueOf(this.jPasswordField1.getPassword()));
+      }catch(Exception e){
+          System.out.println(e);
+      }
+      
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
