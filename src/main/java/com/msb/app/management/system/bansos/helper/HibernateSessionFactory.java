@@ -23,6 +23,7 @@
  */
 package com.msb.app.management.system.bansos.helper;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.hibernate.SessionFactory;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -34,27 +35,35 @@ import org.hibernate.cfg.Configuration;
  */
 public class HibernateSessionFactory {
 
-
     private static SessionFactory sf = configureSessionFactory();
     private static ServiceRegistry serviceRegistry;
 
     private static SessionFactory configureSessionFactory() {
         try {
-            Configuration config = new Configuration();
-            config.configure();
+            Dotenv env;
+            env = Dotenv.load();
+            Configuration config;
+            config = new Configuration().setProperty("hibernate.connection.url", env.get("DB_JDBC_CONNECTION"))
+                    .setProperty("hibernate.connection.username", env.get("DB_USERNAME"))
+                    .setProperty("hibernate.connection.password", env.get("DB_PASSWORD"))
+                    .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+                    .setProperty("hibernate.show_sql", env.get("DB_LOG"))
+                    .addAnnotatedClass(com.msb.app.management.system.bansos.model.BansosEntity.class);
             serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(config.getProperties()).build();
             sf = config.buildSessionFactory();
-            return  sf;
-        } catch (Throwable ex){
-            System.err.println("Session factory creation failed." +ex);
+            return sf;
+        } catch (Throwable ex) {
+            System.err.println("Session factory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
-    public static SessionFactory getSessionFactory(){
+
+    public static SessionFactory getSessionFactory() {
         return sf;
     }
-    public static void shutdown(){
+
+    public static void shutdown() {
         getSessionFactory().close();
     }
 }
