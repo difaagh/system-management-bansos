@@ -21,20 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.msb.app.management.system.bansos;
+package com.msb.app.management.system.bansos.model;
 
-import com.msb.app.management.system.bansos.screen.Login;
+import java.util.Collection;
+import java.sql.SQLException;
 
 /**
  *
  * @author difaagh
  */
-public class main {
 
-    public static void main(String[] args) {
-        Login login = new Login();
-        login.setVisible(true);
-        
 
-    }
+public interface BansosDao {
+    public void createBansos(BansosEntity bansos) throws SQLException;
+    public void updateBansos(BansosEntity bansos) throws SQLException;
+    public BansosEntity getBansosById(int bansos_id) throws SQLException;
+    public Collection getAllBansos() throws SQLException;
+    public void deleteBansos(BansosEntity bansos) throws SQLException;
+
 }

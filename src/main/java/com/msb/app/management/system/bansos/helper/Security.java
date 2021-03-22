@@ -29,7 +29,7 @@ public class Security {
 
     public int login(String username, String password)
             throws IOException {
-        
+
         Dotenv dotenv = Dotenv.load();
         String keycloakPath = dotenv.get("KEYCLOAK_URL");
         String keycloakRealms = dotenv.get("KEYCLOAK_REALM");
@@ -42,15 +42,19 @@ public class Security {
                 .build();
 
         HttpUrl keycloakUrl = HttpUrl.parse(keycloakPath + "/auth/realms/" + keycloakRealms + "/protocol/openid-connect/token");
-                System.out.println(keycloakUrl);
+        System.out.println(keycloakUrl);
         Request request = new Request.Builder()
                 .url(keycloakUrl)
                 .post(formBody)
                 .build();
 
         Call call = this.client.newCall(request);
-        Response response = call.execute();
-        return response.code();
+        try {
+            Response response = call.execute();
+            return response.code();
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
+        }
 
     }
 }

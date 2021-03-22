@@ -6,13 +6,15 @@
 package com.msb.app.management.system.bansos.screen;
 
 import com.msb.app.management.system.bansos.helper.Security;
+import java.awt.HeadlessException;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 
 
 /**
  *
- * @author mac
+ * @author difaagh
  */
 public class Login extends javax.swing.JFrame {
 
@@ -117,12 +119,14 @@ public class Login extends javax.swing.JFrame {
           int statusLogin = security.login(this.jTextField1.getText(), String.valueOf(this.jPasswordField1.getPassword()));
           if(statusLogin == 200) {
              Menu menu = new Menu();
+             this.setVisible(false);
+             this.dispose();
              menu.setVisible(true);
              return;
           }
           JOptionPane.showMessageDialog(this, "Invalid username or password");
-      }catch(Exception e){
-          System.out.println(e);
+      }catch(HeadlessException | IOException e){
+          JOptionPane.showMessageDialog(this, e.getMessage());
       }
       
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -21,20 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.msb.app.management.system.bansos;
+package com.msb.app.management.system.bansos.helper;
 
-import com.msb.app.management.system.bansos.screen.Login;
+import org.hibernate.SessionFactory;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 /**
  *
  * @author difaagh
  */
-public class main {
+public class HibernateSessionFactory {
 
-    public static void main(String[] args) {
-        Login login = new Login();
-        login.setVisible(true);
-        
 
+    private static SessionFactory sf = configureSessionFactory();
+    private static ServiceRegistry serviceRegistry;
+
+    private static SessionFactory configureSessionFactory() {
+        try {
+            Configuration config = new Configuration();
+            config.configure();
+            serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(config.getProperties()).build();
+            sf = config.buildSessionFactory();
+            return  sf;
+        } catch (Throwable ex){
+            System.err.println("Session factory creation failed." +ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+    public static SessionFactory getSessionFactory(){
+        return sf;
+    }
+    public static void shutdown(){
+        getSessionFactory().close();
     }
 }
