@@ -1,5 +1,6 @@
 package com.msb.app.management.system.bansos.helper;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -26,17 +27,22 @@ public class Security {
         this.client = new OkHttpClient();
     }
 
-    public void login(String username, String password)
+    public int login(String username, String password)
             throws IOException {
-        System.out.println(password);
+        
+        Dotenv dotenv = Dotenv.load();
+        String keycloakPath = dotenv.get("KEYCLOAK_URL");
+        String keycloakRealms = dotenv.get("KEYCLOAK_REALM");
+        String keycloakClientId = dotenv.get("KEYCLOAK_CLIENT_ID");
         RequestBody formBody = new FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
-                .add("client_id", "ocbnisp")
+                .add("client_id", keycloakClientId)
                 .add("grant_type", "password")
                 .build();
-        // TODO add env for keycloak var
-        HttpUrl keycloakUrl = HttpUrl.parse("http://127.0.0.1:8080/auth/realms/master/protocol/openid-connect/token");
+
+        HttpUrl keycloakUrl = HttpUrl.parse(keycloakPath + "/auth/realms/" + keycloakRealms + "/protocol/openid-connect/token");
+                System.out.println(keycloakUrl);
         Request request = new Request.Builder()
                 .url(keycloakUrl)
                 .post(formBody)
@@ -44,6 +50,7 @@ public class Security {
 
         Call call = this.client.newCall(request);
         Response response = call.execute();
+        return response.code();
 
     }
 }

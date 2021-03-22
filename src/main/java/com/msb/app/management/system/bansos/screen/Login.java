@@ -6,6 +6,7 @@
 package com.msb.app.management.system.bansos.screen;
 
 import com.msb.app.management.system.bansos.helper.Security;
+import javax.swing.JOptionPane;
 
 
 
@@ -113,7 +114,13 @@ public class Login extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
       Security security = new Security();
       try{
-          security.login(this.jTextField1.getText(), String.valueOf(this.jPasswordField1.getPassword()));
+          int statusLogin = security.login(this.jTextField1.getText(), String.valueOf(this.jPasswordField1.getPassword()));
+          if(statusLogin == 200) {
+             Menu menu = new Menu();
+             menu.setVisible(true);
+             return;
+          }
+          JOptionPane.showMessageDialog(this, "Invalid username or password");
       }catch(Exception e){
           System.out.println(e);
       }
