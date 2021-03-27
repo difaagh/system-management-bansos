@@ -32,11 +32,11 @@ import java.sql.SQLException;
  */
 
 
-public interface BansosDao {
-    public void createBansos(BansosEntity bansos) throws SQLException;
-    public void updateBansos(BansosEntity bansos) throws SQLException;
-    public BansosEntity getBansosById(int bansos_id) throws SQLException;
+public interface EventDao {
+    public void createBansos(EventEntity bansos) throws SQLException;
+    public void updateBansos(EventEntity bansos) throws SQLException;
+    public EventEntity getBansosById(int bansos_id) throws SQLException;
     public Collection getAllBansos() throws SQLException;
-    public void deleteBansos(BansosEntity bansos) throws SQLException;
+    public void deleteBansos(EventEntity bansos) throws SQLException;
 
 }

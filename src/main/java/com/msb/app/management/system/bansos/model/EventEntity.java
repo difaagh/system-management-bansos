@@ -40,7 +40,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "bansos")
-public class BansosEntity {
+public class EventEntity {
 
     @Id
     @GeneratedValue(generator = "incrementator")

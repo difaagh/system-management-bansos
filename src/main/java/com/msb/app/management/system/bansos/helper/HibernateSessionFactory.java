@@ -48,7 +48,7 @@ public class HibernateSessionFactory {
                     .setProperty("hibernate.connection.password", env.get("DB_PASSWORD"))
                     .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
                     .setProperty("hibernate.show_sql", env.get("DB_LOG"))
-                    .addAnnotatedClass(com.msb.app.management.system.bansos.model.BansosEntity.class);
+                    .addAnnotatedClass(com.msb.app.management.system.bansos.model.EventEntity.class);
             serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(config.getProperties()).build();
             sf = config.buildSessionFactory();

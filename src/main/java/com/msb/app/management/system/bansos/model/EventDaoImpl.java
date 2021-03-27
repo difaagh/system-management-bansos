@@ -35,10 +35,10 @@ import java.util.List;
  *
  * @author difaagh
  */
-public class BansosDaoImpl implements BansosDao {
+public class EventDaoImpl implements EventDao {
 
     @Override
-    public void createBansos(BansosEntity bansos) throws SQLException {
+    public void createBansos(EventEntity bansos) throws SQLException {
             Session session = null;
         try {
             System.out.println("disini aja");
@@ -57,7 +57,7 @@ public class BansosDaoImpl implements BansosDao {
     }
 
     @Override
-    public void updateBansos(BansosEntity bansos) throws SQLException {
+    public void updateBansos(EventEntity bansos) throws SQLException {
          Session session = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
@@ -74,12 +74,12 @@ public class BansosDaoImpl implements BansosDao {
     }
 
     @Override
-    public BansosEntity getBansosById(int bansos_id) throws SQLException {
+    public EventEntity getBansosById(int bansos_id) throws SQLException {
         Session session = null;
-        BansosEntity bansos = null;
+        EventEntity bansos = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
-            bansos = (BansosEntity)session.load(BansosEntity.class, bansos_id);
+            bansos = (EventEntity)session.load(EventEntity.class, bansos_id);
             Hibernate.initialize(bansos);
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,10 +94,10 @@ public class BansosDaoImpl implements BansosDao {
     @Override
     public Collection getAllBansos() throws SQLException {
         Session session = null;
-        List listBansos = new ArrayList<BansosEntity>();
+        List listBansos = new ArrayList<EventEntity>();
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
-            listBansos = session.createCriteria(BansosEntity.class).list();
+            listBansos = session.createCriteria(EventEntity.class).list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -109,7 +109,7 @@ public class BansosDaoImpl implements BansosDao {
     }
 
     @Override
-    public void deleteBansos(BansosEntity bansos) throws SQLException {
+    public void deleteBansos(EventEntity bansos) throws SQLException {
          Session session = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();

@@ -6,8 +6,8 @@
 package com.msb.app.management.system.bansos.screen;
 
 import com.msb.app.management.system.bansos.helper.HibernateSessionFactory;
-import com.msb.app.management.system.bansos.model.BansosDaoImpl;
-import com.msb.app.management.system.bansos.model.BansosEntity;
+import com.msb.app.management.system.bansos.model.EventDaoImpl;
+import com.msb.app.management.system.bansos.model.EventEntity;
 import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
