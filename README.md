@@ -8,3 +8,6 @@ DB_JDBC_CONNECTION="jdbc:mysql://localhost:3306/yourdatabase"
 DB_PASSWORD="password"
 DB_LOG="true"
 
+# disable security
+set JAVA_ENV="development"
+
