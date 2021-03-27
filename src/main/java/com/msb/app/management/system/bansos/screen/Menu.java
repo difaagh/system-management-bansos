@@ -5,8 +5,7 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
-import com.msb.app.management.system.bansos.helper.HibernateSessionFactory;
-import com.msb.app.management.system.bansos.model.EventDaoImpl;
+import com.msb.app.management.system.bansos.service.event.EventDaoImpl;
 import com.msb.app.management.system.bansos.model.EventEntity;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -24,7 +23,24 @@ public class Menu extends javax.swing.JFrame {
     public Menu() {
         initComponents();
     }
-
+    
+    private void loadMenu1(){
+        EventEntity event = null;
+        if(!isLoadMenu1)return;
+        EventDaoImpl eventService = new EventDaoImpl();
+        try{
+         event = eventService.getLatest();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }finally{
+            if(event == null) return;
+            this.eventValue.setText(event.getName());
+            this.endValue.setText(event.getStartDate().toString());
+            this.startValue.setText(event.getStartDate().toString());
+            this.amountValue.setText(event.getAmount().toString());
+        }
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,9 +64,13 @@ public class Menu extends javax.swing.JFrame {
         baseMenu = new javax.swing.JPanel();
         baseMenu1 = new javax.swing.JPanel();
         eventLabel = new javax.swing.JLabel();
-        eventName = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        startValue = new javax.swing.JLabel();
+        endValue = new javax.swing.JLabel();
+        eventValue = new javax.swing.JLabel();
+        amountLabel = new javax.swing.JLabel();
+        amountValue = new javax.swing.JLabel();
         baseMenu2 = new javax.swing.JPanel();
         baseMenu3 = new javax.swing.JPanel();
         baseMenu4 = new javax.swing.JPanel();
@@ -184,11 +204,21 @@ public class Menu extends javax.swing.JFrame {
 
         baseMenu1.setBackground(new java.awt.Color(204, 255, 255));
 
-        eventLabel.setText("Event :");
+        eventLabel.setText("Event           :");
 
-        jLabel1.setText("Start :");
+        jLabel1.setText("Start            :");
 
-        jLabel2.setText("End :");
+        jLabel2.setText("End              :");
+
+        startValue.setText("null");
+
+        endValue.setText("null");
+
+        eventValue.setText("null");
+
+        amountLabel.setText("Jumlah dana : ");
+
+        amountValue.setText("null");
 
         javax.swing.GroupLayout baseMenu1Layout = new javax.swing.GroupLayout(baseMenu1);
         baseMenu1.setLayout(baseMenu1Layout);
@@ -197,14 +227,24 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(baseMenu1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
                     .addGroup(baseMenu1Layout.createSequentialGroup()
-                        .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(eventLabel)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(eventName)))
-                .addContainerGap(942, Short.MAX_VALUE))
+                        .addComponent(amountLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(amountValue))
+                    .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(baseMenu1Layout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(endValue))
+                        .addGroup(baseMenu1Layout.createSequentialGroup()
+                            .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(eventLabel)
+                                .addComponent(jLabel1))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(startValue)
+                                .addComponent(eventValue)))))
+                .addContainerGap(877, Short.MAX_VALUE))
         );
         baseMenu1Layout.setVerticalGroup(
             baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,15 +252,24 @@ public class Menu extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(eventLabel)
-                    .addComponent(eventName))
+                    .addComponent(eventValue))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1)
+                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(startValue))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addContainerGap(590, Short.MAX_VALUE))
+                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(endValue))
+                .addGap(18, 18, 18)
+                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(amountLabel)
+                    .addComponent(amountValue))
+                .addContainerGap(556, Short.MAX_VALUE))
         );
 
-        baseMenu2.setBackground(new java.awt.Color(255, 102, 255));
+        baseMenu2.setBackground(new java.awt.Color(255, 255, 255));
+        baseMenu2.setEnabled(false);
 
         javax.swing.GroupLayout baseMenu2Layout = new javax.swing.GroupLayout(baseMenu2);
         baseMenu2.setLayout(baseMenu2Layout);
@@ -392,6 +441,8 @@ public class Menu extends javax.swing.JFrame {
 
     private void sMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu1MouseClicked
         baseMenu1.setVisible(true);
+        this.isLoadMenu1 = true;
+        loadMenu1();
         baseMenu2.setVisible(false);
         baseMenu3.setVisible(false);
         baseMenu4.setVisible(false);
@@ -457,16 +508,19 @@ public class Menu extends javax.swing.JFrame {
             }
         });
     }
-
+    private boolean isLoadMenu1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel amountLabel;
+    private javax.swing.JLabel amountValue;
     private javax.swing.JPanel badgeLogo;
     private javax.swing.JPanel baseMenu;
     private javax.swing.JPanel baseMenu1;
     private javax.swing.JPanel baseMenu2;
     private javax.swing.JPanel baseMenu3;
     private javax.swing.JPanel baseMenu4;
+    private javax.swing.JLabel endValue;
     private javax.swing.JLabel eventLabel;
-    private javax.swing.JLabel eventName;
+    private javax.swing.JLabel eventValue;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
@@ -480,5 +534,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel sMenu3;
     private javax.swing.JLabel sMenu4;
     private javax.swing.JLabel sMenu5;
+    private javax.swing.JLabel startValue;
     // End of variables declaration//GEN-END:variables
 }

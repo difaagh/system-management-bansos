@@ -23,20 +23,17 @@
  */
 package com.msb.app.management.system.bansos.model;
 
-import java.util.Collection;
 import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  *
  * @author difaagh
  */
-
-
-public interface EventDao {
-    public void create(EventEntity event) throws SQLException;
-    public void update(EventEntity event) throws SQLException;
-    public EventEntity getById(int event_id) throws SQLException;
-    public Collection getAll() throws SQLException;
-    public void delete(EventEntity event) throws SQLException;
-
+public interface PackageDao {
+    public void create(PackageEntity pkg) throws SQLException;
+    public void update(PackageEntity pkg) throws SQLException;
+    public PackageEntity getById(int pkg_id) throws SQLException;
+    public Collection getAllByEventId(int event_id) throws SQLException;
+    public void delete(PackageEntity pkg) throws SQLException;
 }

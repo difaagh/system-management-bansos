@@ -39,8 +39,8 @@ import org.hibernate.annotations.GenericGenerator;
  * @author difaagh
  */
 @Entity
-@Table(name = "event")
-public class EventEntity {
+@Table(name = "package")
+public class PackageEntity {
 
     @Id
     @GeneratedValue(generator = "incrementator")
@@ -59,14 +59,6 @@ public class EventEntity {
     @Column(name = "created_date")
     private Date createdDate = new Date();
 
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate() {
-        this.createdDate = new Date();
-    }
-
     @Column(name = "name")
     private String name;
 
@@ -77,37 +69,26 @@ public class EventEntity {
     public void setName(String name) {
         this.name = name;
     }
-    @Column(name = "amount")
-    private String amount;
+    
+    @Column(name = "price")
+    private String price;
 
-    public String getAmount() {
-        return this.amount;
+    public String getPrice() {
+        return this.price;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    @Column(name = "start_date")
-    private Date startDate;
+    @Column(name = "event_id")
+    private int eventId;
 
-    public Date getStartDate() {
-        return this.startDate;
+    public int getEventId() {
+        return this.eventId;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
-
-    @Column(name = "end_date")
-    private Date endDate;
-
-    public Date getEndDate() {
-        return this.endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
 }

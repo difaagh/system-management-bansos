@@ -32,6 +32,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -39,8 +40,8 @@ import org.hibernate.annotations.GenericGenerator;
  * @author difaagh
  */
 @Entity
-@Table(name = "event")
-public class EventEntity {
+@Table(name = "cash")
+public class CashEntity {
 
     @Id
     @GeneratedValue(generator = "incrementator")
@@ -54,6 +55,7 @@ public class EventEntity {
     public void setId(int id) {
         this.id = id;
     }
+    
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
@@ -66,48 +68,27 @@ public class EventEntity {
     public void setCreatedDate() {
         this.createdDate = new Date();
     }
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "udated_date")
+    private Date updatedDate = new Date();
 
-    @Column(name = "name")
-    private String name;
-
-    public String getName() {
-        return this.name;
+    public Date getUpdatedDate() {
+        return this.updatedDate;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    @Column(name = "amount")
-    private String amount;
-
-    public String getAmount() {
-        return this.amount;
+    public void setUpdatedDate() {
+        this.updatedDate = new Date();
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    @Column(name = "total_amount")
+    private int totalAmount;
+    
+    public int getTotalAmount(){
+        return this.totalAmount;
     }
-
-    @Column(name = "start_date")
-    private Date startDate;
-
-    public Date getStartDate() {
-        return this.startDate;
+    
+    public void setTotalAmount(int totalAmount){
+        this.totalAmount = totalAmount;
     }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    @Column(name = "end_date")
-    private Date endDate;
-
-    public Date getEndDate() {
-        return this.endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
 }

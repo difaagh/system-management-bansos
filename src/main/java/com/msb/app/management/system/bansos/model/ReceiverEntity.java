@@ -25,10 +25,8 @@ package com.msb.app.management.system.bansos.model;
 
 import java.util.Date;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,11 +36,8 @@ import org.hibernate.annotations.GenericGenerator;
  *
  * @author difaagh
  */
-@Entity
-@Table(name = "event")
-public class EventEntity {
-
-    @Id
+public class ReceiverEntity {
+        @Id
     @GeneratedValue(generator = "incrementator")
     @GenericGenerator(name = "incrementator", strategy = "increment")
     private int id;
@@ -59,14 +54,6 @@ public class EventEntity {
     @Column(name = "created_date")
     private Date createdDate = new Date();
 
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public void setCreatedDate() {
-        this.createdDate = new Date();
-    }
-
     @Column(name = "name")
     private String name;
 
@@ -77,37 +64,26 @@ public class EventEntity {
     public void setName(String name) {
         this.name = name;
     }
-    @Column(name = "amount")
-    private String amount;
+    
+    @Column(name = "approved")
+    private boolean approved;
 
-    public String getAmount() {
-        return this.amount;
+    public boolean approved() {
+        return this.approved;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 
-    @Column(name = "start_date")
-    private Date startDate;
+    @Column(name = "event_id")
+    private int eventId;
 
-    public Date getStartDate() {
-        return this.startDate;
+    public int getEventId() {
+        return this.eventId;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
-
-    @Column(name = "end_date")
-    private Date endDate;
-
-    public Date getEndDate() {
-        return this.endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
 }
