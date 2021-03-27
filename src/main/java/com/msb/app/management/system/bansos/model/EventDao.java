@@ -33,10 +33,10 @@ import java.sql.SQLException;
 
 
 public interface EventDao {
-    public void createBansos(EventEntity bansos) throws SQLException;
-    public void updateBansos(EventEntity bansos) throws SQLException;
-    public EventEntity getBansosById(int bansos_id) throws SQLException;
-    public Collection getAllBansos() throws SQLException;
-    public void deleteBansos(EventEntity bansos) throws SQLException;
+    public void create(EventEntity event) throws SQLException;
+    public void update(EventEntity event) throws SQLException;
+    public EventEntity getById(int event_id) throws SQLException;
+    public Collection getAll() throws SQLException;
+    public void delete(EventEntity event) throws SQLException;
 
 }

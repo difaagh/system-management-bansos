@@ -39,7 +39,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @author difaagh
  */
 @Entity
-@Table(name = "bansos")
+@Table(name = "event")
 public class EventEntity {
 
     @Id

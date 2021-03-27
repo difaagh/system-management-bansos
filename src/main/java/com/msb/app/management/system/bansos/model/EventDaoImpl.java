@@ -38,13 +38,13 @@ import java.util.List;
 public class EventDaoImpl implements EventDao {
 
     @Override
-    public void createBansos(EventEntity bansos) throws SQLException {
+    public void create(EventEntity event) throws SQLException {
             Session session = null;
         try {
             System.out.println("disini aja");
             session = HibernateSessionFactory.getSessionFactory().openSession();
             session.beginTransaction();
-            session.save(bansos);
+            session.save(event);
             session.getTransaction().commit();
         } catch (Exception e) {
             System.out.println("disini");
@@ -57,7 +57,7 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public void updateBansos(EventEntity bansos) throws SQLException {
+    public void update(EventEntity bansos) throws SQLException {
          Session session = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
@@ -74,12 +74,12 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public EventEntity getBansosById(int bansos_id) throws SQLException {
+    public EventEntity getById(int event_id) throws SQLException {
         Session session = null;
         EventEntity bansos = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
-            bansos = (EventEntity)session.load(EventEntity.class, bansos_id);
+            bansos = (EventEntity)session.load(EventEntity.class, event_id);
             Hibernate.initialize(bansos);
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +92,7 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public Collection getAllBansos() throws SQLException {
+    public Collection getAll() throws SQLException {
         Session session = null;
         List listBansos = new ArrayList<EventEntity>();
         try {
@@ -109,12 +109,12 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public void deleteBansos(EventEntity bansos) throws SQLException {
+    public void delete(EventEntity event) throws SQLException {
          Session session = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
             session.beginTransaction();
-            session.delete(bansos);
+            session.delete(event);
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
