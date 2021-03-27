@@ -27,16 +27,17 @@ public class Security {
         this.client = new OkHttpClient();
     }
 
-    public int login(String username, String password)
+    public int login(String username, char[] password)
             throws IOException {
 
         Dotenv dotenv = Dotenv.load();
+        if("development".equals(dotenv.get("JAVA_ENV"))) return 200;
         String keycloakPath = dotenv.get("KEYCLOAK_URL");
         String keycloakRealms = dotenv.get("KEYCLOAK_REALM");
         String keycloakClientId = dotenv.get("KEYCLOAK_CLIENT_ID");
         RequestBody formBody = new FormBody.Builder()
                 .add("username", username)
-                .add("password", password)
+                .add("password", String.valueOf(password))
                 .add("client_id", keycloakClientId)
                 .add("grant_type", "password")
                 .build();
