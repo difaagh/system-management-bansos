@@ -38,6 +38,8 @@ public interface ReceiverDao {
     public void update(ReceiverEntity receiver) throws SQLException;
 
     public ReceiverEntity getById(int receiver_id) throws SQLException;
+    
+    public ReceiverEntity getByCode(String code) throws SQLException;
 
     public Collection getAllByEventId(int receiver_id) throws SQLException;
 

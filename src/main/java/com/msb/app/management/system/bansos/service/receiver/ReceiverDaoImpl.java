@@ -128,4 +128,22 @@ public class ReceiverDaoImpl implements ReceiverDao {
         }
     }
 
+    @Override
+    public ReceiverEntity getByCode(String code) throws SQLException {
+        Session session = null;
+        ReceiverEntity receiver = null;
+        try {
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            receiver = (ReceiverEntity) session.load(ReceiverEntity.class, code);
+            Hibernate.initialize(receiver);
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return receiver;
+    }
+
 }

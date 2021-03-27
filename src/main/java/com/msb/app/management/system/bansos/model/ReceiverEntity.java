@@ -86,4 +86,15 @@ public class ReceiverEntity {
     public void setEventId(int eventId) {
         this.eventId = eventId;
     }
+    
+    @Column(name = "code")
+    private String code;
+
+    public int getCode() {
+        return this.eventId;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }
