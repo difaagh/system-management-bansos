@@ -11,9 +11,9 @@ import com.msb.app.management.system.bansos.model.EventEntity;
 import com.msb.app.management.system.bansos.model.ReceiverEntity;
 import java.awt.Color;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -31,7 +31,7 @@ public class Menu extends javax.swing.JFrame {
     public Menu() {
         initComponents();
         this.isLoadMenu1 = true;
-        TableColumnModel tcm = this.tableEvent.getColumnModel();
+        TableColumnModel tcm = this.tableReceiver.getColumnModel();
         TableColumn column = tcm.getColumn(4);
         column.setMinWidth(0);
         column.setMaxWidth(0);
@@ -54,9 +54,23 @@ public class Menu extends javax.swing.JFrame {
             if (event == null) {
                 return;
             }
+
+            SimpleDateFormat changeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            java.util.Date startTmp = null;
+            java.util.Date endTmp = null;
+            try {
+                startTmp = changeFormat.parse(event.getStartDate() + "");
+                endTmp = changeFormat.parse(event.getEndDate() + "");
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+            
+            String start = changeFormat.format(startTmp);
+            String end = changeFormat.format(endTmp);
+
             this.eventValue.setText(event.getName());
-            this.endValue.setText(event.getEndDate().toString());
-            this.startValue.setText(event.getStartDate().toString());
+            this.endValue.setText(start);
+            this.startValue.setText(end);
             this.amountValue.setText(event.getAmount().toString());
             Collection<ReceiverEntity> listReceiver = null;
             ReceiverDaoImpl receiverService = new ReceiverDaoImpl();
@@ -69,17 +83,17 @@ public class Menu extends javax.swing.JFrame {
                 if (listReceiver.isEmpty()) {
                     return;
                 }
-                DefaultTableModel newTableModel = (DefaultTableModel) this.tableEvent.getModel();
+                DefaultTableModel newTableModel = (DefaultTableModel) this.tableReceiver.getModel();
                 newTableModel.setRowCount(listReceiver.size());
-                this.tableEvent.setModel(newTableModel);
+                this.tableReceiver.setModel(newTableModel);
                 for (ReceiverEntity receiver : listReceiver) {
                     String isApproved = receiver.approved() ? "Approved" : "Approve";
-                    this.tableEvent.setValueAt(colTable + 1, colTable, 0);
-                    this.tableEvent.setValueAt(receiver.getName(), colTable, 1);
-                    this.tableEvent.setValueAt(receiver.getCode(), colTable, 2);
-                    this.tableEvent.setValueAt(isApproved, colTable, 3);
+                    this.tableReceiver.setValueAt(colTable + 1, colTable, 0);
+                    this.tableReceiver.setValueAt(receiver.getName(), colTable, 1);
+                    this.tableReceiver.setValueAt(receiver.getCode(), colTable, 2);
+                    this.tableReceiver.setValueAt(isApproved, colTable, 3);
                     String str = receiver.getId() + "," + receiver.getEventId();
-                    this.tableEvent.setValueAt(str, colTable, 4);
+                    this.tableReceiver.setValueAt(str, colTable, 4);
                     colTable++;
                 }
             }
@@ -98,16 +112,16 @@ public class Menu extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        sMenu2 = new javax.swing.JPanel();
+        subMenu = new javax.swing.JPanel();
         sMenu1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        sMenu3 = new javax.swing.JLabel();
+        sMenu2 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        sMenu4 = new javax.swing.JLabel();
+        sMenu3 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
-        sMenu5 = new javax.swing.JLabel();
+        sMenu4 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
-        jPanel3 = new javax.swing.JPanel();
+        header = new javax.swing.JPanel();
         baseMenu = new javax.swing.JPanel();
         baseMenu1 = new javax.swing.JPanel();
         eventLabel = new javax.swing.JLabel();
@@ -119,7 +133,7 @@ public class Menu extends javax.swing.JFrame {
         amountLabel = new javax.swing.JLabel();
         amountValue = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableEvent = new javax.swing.JTable();
+        tableReceiver = new javax.swing.JTable();
         baseMenu2 = new javax.swing.JPanel();
         baseMenu3 = new javax.swing.JPanel();
         baseMenu4 = new javax.swing.JPanel();
@@ -130,8 +144,8 @@ public class Menu extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        sMenu2.setBackground(new java.awt.Color(255, 204, 51));
-        sMenu2.setPreferredSize(new java.awt.Dimension(190, 700));
+        subMenu.setBackground(new java.awt.Color(255, 204, 51));
+        subMenu.setPreferredSize(new java.awt.Dimension(190, 700));
 
         sMenu1.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
         sMenu1.setText("Home");
@@ -149,6 +163,22 @@ public class Menu extends javax.swing.JFrame {
 
         jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
 
+        sMenu2.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
+        sMenu2.setText("Home");
+        sMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sMenu2MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                sMenu2MouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                sMenu2MouseEntered(evt);
+            }
+        });
+
+        jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
+
         sMenu3.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
         sMenu3.setText("Home");
         sMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -163,7 +193,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
+        jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
 
         sMenu4.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
         sMenu4.setText("Home");
@@ -179,73 +209,57 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
-
-        sMenu5.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
-        sMenu5.setText("Home");
-        sMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sMenu5MouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                sMenu5MouseExited(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                sMenu5MouseEntered(evt);
-            }
-        });
-
         jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
 
-        javax.swing.GroupLayout sMenu2Layout = new javax.swing.GroupLayout(sMenu2);
-        sMenu2.setLayout(sMenu2Layout);
-        sMenu2Layout.setHorizontalGroup(
-            sMenu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sMenu2Layout.createSequentialGroup()
+        javax.swing.GroupLayout subMenuLayout = new javax.swing.GroupLayout(subMenu);
+        subMenu.setLayout(subMenuLayout);
+        subMenuLayout.setHorizontalGroup(
+            subMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(subMenuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(sMenu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(subMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sMenu1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
-                    .addComponent(sMenu3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(sMenu2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                     .addComponent(jSeparator2)
-                    .addComponent(sMenu4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(sMenu3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                     .addComponent(jSeparator3)
-                    .addComponent(sMenu5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(sMenu4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                     .addComponent(jSeparator4))
                 .addContainerGap())
         );
-        sMenu2Layout.setVerticalGroup(
-            sMenu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sMenu2Layout.createSequentialGroup()
+        subMenuLayout.setVerticalGroup(
+            subMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(subMenuLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(sMenu1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sMenu3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sMenu2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sMenu4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sMenu3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sMenu5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sMenu4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(472, Short.MAX_VALUE))
         );
 
-        jPanel3.setBackground(new java.awt.Color(255, 204, 102));
+        header.setBackground(new java.awt.Color(255, 204, 102));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
+        header.setLayout(headerLayout);
+        headerLayout.setHorizontalGroup(
+            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        headerLayout.setVerticalGroup(
+            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
@@ -270,7 +284,7 @@ public class Menu extends javax.swing.JFrame {
 
         amountValue.setText("null");
 
-        tableEvent.setModel(new javax.swing.table.DefaultTableModel(
+        tableReceiver.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -289,14 +303,14 @@ public class Menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableEvent.setSelectionBackground(new java.awt.Color(255, 153, 102));
-        tableEvent.getTableHeader().setResizingAllowed(false);
-        tableEvent.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableReceiver.setSelectionBackground(new java.awt.Color(255, 153, 102));
+        tableReceiver.getTableHeader().setResizingAllowed(false);
+        tableReceiver.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableEventMouseClicked(evt);
+                tableReceiverMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tableEvent);
+        jScrollPane1.setViewportView(tableReceiver);
 
         javax.swing.GroupLayout baseMenu1Layout = new javax.swing.GroupLayout(baseMenu1);
         baseMenu1.setLayout(baseMenu1Layout);
@@ -358,11 +372,11 @@ public class Menu extends javax.swing.JFrame {
         baseMenu2.setLayout(baseMenu2Layout);
         baseMenu2Layout.setHorizontalGroup(
             baseMenu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 986, Short.MAX_VALUE)
+            .addGap(0, 1032, Short.MAX_VALUE)
         );
         baseMenu2Layout.setVerticalGroup(
             baseMenu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 695, Short.MAX_VALUE)
+            .addGap(0, 742, Short.MAX_VALUE)
         );
 
         baseMenu3.setBackground(new java.awt.Color(255, 0, 51));
@@ -453,21 +467,21 @@ public class Menu extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sMenu2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                    .addComponent(subMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
                     .addComponent(badgeLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(header, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(baseMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(badgeLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sMenu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(subMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(baseMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
@@ -497,6 +511,15 @@ public class Menu extends javax.swing.JFrame {
         sMenu1.setBackground(new Color(255, 204, 51));
     }//GEN-LAST:event_sMenu1MouseExited
 
+    private void sMenu2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu2MouseExited
+        sMenu2.setBackground(new Color(255, 204, 51));
+    }//GEN-LAST:event_sMenu2MouseExited
+
+    private void sMenu2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu2MouseEntered
+        sMenu2.setBackground(Color.WHITE);
+        sMenu2.setOpaque(true);
+    }//GEN-LAST:event_sMenu2MouseEntered
+
     private void sMenu3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu3MouseExited
         sMenu3.setBackground(new Color(255, 204, 51));
     }//GEN-LAST:event_sMenu3MouseExited
@@ -515,15 +538,6 @@ public class Menu extends javax.swing.JFrame {
         sMenu4.setOpaque(true);
     }//GEN-LAST:event_sMenu4MouseEntered
 
-    private void sMenu5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu5MouseExited
-        sMenu5.setBackground(new Color(255, 204, 51));
-    }//GEN-LAST:event_sMenu5MouseExited
-
-    private void sMenu5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu5MouseEntered
-        sMenu5.setBackground(Color.WHITE);
-        sMenu5.setOpaque(true);
-    }//GEN-LAST:event_sMenu5MouseEntered
-
     private void sMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu1MouseClicked
         baseMenu1.setVisible(true);
         this.isLoadMenu1 = true;
@@ -533,35 +547,34 @@ public class Menu extends javax.swing.JFrame {
         baseMenu4.setVisible(false);
     }//GEN-LAST:event_sMenu1MouseClicked
 
-    private void sMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu3MouseClicked
+    private void sMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu2MouseClicked
         baseMenu2.setVisible(true);
         baseMenu1.setVisible(false);
         baseMenu3.setVisible(false);
         baseMenu4.setVisible(false);
-    }//GEN-LAST:event_sMenu3MouseClicked
+    }//GEN-LAST:event_sMenu2MouseClicked
 
-    private void sMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseClicked
+    private void sMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu3MouseClicked
         baseMenu3.setVisible(true);
         baseMenu1.setVisible(false);
         baseMenu2.setVisible(false);
         baseMenu4.setVisible(false);
-    }//GEN-LAST:event_sMenu4MouseClicked
+    }//GEN-LAST:event_sMenu3MouseClicked
 
-    private void sMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu5MouseClicked
+    private void sMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseClicked
         baseMenu4.setVisible(true);
         baseMenu1.setVisible(false);
         baseMenu2.setVisible(false);
         baseMenu3.setVisible(false);
-    }//GEN-LAST:event_sMenu5MouseClicked
+    }//GEN-LAST:event_sMenu4MouseClicked
 
-    private void tableEventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEventMouseClicked
+    private void tableReceiverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableReceiverMouseClicked
         if (evt.getClickCount() == 2 && evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
-            int row = tableEvent.rowAtPoint(evt.getPoint());
-            int col = tableEvent.columnAtPoint(evt.getPoint());
+            int row = tableReceiver.rowAtPoint(evt.getPoint());
+            int col = tableReceiver.columnAtPoint(evt.getPoint());
             if (row >= 0 && col >= 0) {
-                if (col == 2) {
-                    boolean isApproved = tableEvent.getValueAt(row, col) == "Approved" ? true : false;
-                    System.out.println(tableEvent.getValueAt(row, 3));
+                if (col == 3) {
+                    boolean isApproved = tableReceiver.getValueAt(row, col) == "Approved" ? true : false;
                     if (!isApproved) {
                         int dialogButton = JOptionPane.YES_NO_OPTION;
                         int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure want to approve this ?", "Warning", dialogButton);
@@ -569,17 +582,20 @@ public class Menu extends javax.swing.JFrame {
                             ReceiverDaoImpl receiverService = new ReceiverDaoImpl();
                             try {
                                 ReceiverEntity receiver = new ReceiverEntity();
-                                String str = (String) tableEvent.getValueAt(row, 3);
-                                String name = (String) tableEvent.getValueAt(row, 0);
+                                
+                                String name = (String) tableReceiver.getValueAt(row, 1);
+                                String code = (String) tableReceiver.getValueAt(row, 2);
+                                String str = (String) tableReceiver.getValueAt(row, 4);
                                 String[] splittedStr = str.split(",");
+                                
                                 receiver.setId(Integer.parseInt(splittedStr[0]));
                                 receiver.setEventId(Integer.parseInt(splittedStr[1]));
                                 receiver.setApproved(true);
-                                receiver.setCode((String) tableEvent.getValueAt(row, 1));
+                                receiver.setCode(code);
                                 receiver.setName(name);
+                                
                                 receiverService.update(receiver);
                             } catch (SQLException ex) {
-                                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 JOptionPane.showMessageDialog(this, ex.getMessage());
                             } finally {
                                 loadMenu1();
@@ -590,8 +606,7 @@ public class Menu extends javax.swing.JFrame {
                 }
             }
         }
-
-    }//GEN-LAST:event_tableEventMouseClicked
+    }//GEN-LAST:event_tableReceiverMouseClicked
 
     /**
      * @param args the command line arguments
@@ -626,7 +641,7 @@ public class Menu extends javax.swing.JFrame {
             public void run() {
                 Menu menu = new Menu();
                 menu.setVisible(true);
-                menu.baseMenu.setVisible(true);
+                menu.baseMenu.setVisible(false);
                 menu.baseMenu1.setVisible(true);
                 menu.baseMenu2.setVisible(false);
             }
@@ -645,21 +660,21 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel endValue;
     private javax.swing.JLabel eventLabel;
     private javax.swing.JLabel eventValue;
+    private javax.swing.JPanel header;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JLabel sMenu1;
-    private javax.swing.JPanel sMenu2;
+    private javax.swing.JLabel sMenu2;
     private javax.swing.JLabel sMenu3;
     private javax.swing.JLabel sMenu4;
-    private javax.swing.JLabel sMenu5;
     private javax.swing.JLabel startValue;
-    private javax.swing.JTable tableEvent;
+    private javax.swing.JPanel subMenu;
+    private javax.swing.JTable tableReceiver;
     // End of variables declaration//GEN-END:variables
 }
