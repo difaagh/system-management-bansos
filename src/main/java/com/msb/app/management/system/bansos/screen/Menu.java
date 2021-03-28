@@ -5,19 +5,30 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
+import com.msb.app.management.system.bansos.model.CashEntity;
 import com.msb.app.management.system.bansos.service.event.EventDaoImpl;
 import com.msb.app.management.system.bansos.service.receiver.ReceiverDaoImpl;
 import com.msb.app.management.system.bansos.model.EventEntity;
 import com.msb.app.management.system.bansos.model.ReceiverEntity;
+import com.msb.app.management.system.bansos.service.cash.CashDaoImpl;
 import java.awt.Color;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 /**
  *
@@ -31,6 +42,7 @@ public class Menu extends javax.swing.JFrame {
     public Menu() {
         initComponents();
         this.isLoadMenu1 = true;
+        disableMenuExcept("menu1");
         TableColumnModel tcm = this.tableReceiver.getColumnModel();
         TableColumn column = tcm.getColumn(4);
         column.setMinWidth(0);
@@ -38,6 +50,43 @@ public class Menu extends javax.swing.JFrame {
         column.setPreferredWidth(0);
         loadMenu1();
 
+    }
+
+    private void disableMenuExcept(String menu) {
+        if ("menu1".equals(menu)) {
+            this.menu2.setVisible(false);
+        }
+        if ("menu2".equals(menu)) {
+            this.menu1.setVisible(false);
+        }
+    }
+
+    private void hideOrShowAddCash(boolean con) {
+        if (con) {
+            this.addCashButton.setVisible(false);
+            this.cancelCash.setVisible(true);
+            this.saveCash.setVisible(true);
+            this.addCashValue.setVisible(true);
+            this.rpLabel.setVisible(true);
+            ((AbstractDocument) this.addCashValue.getDocument()).setDocumentFilter(new DocumentFilter() {
+                Pattern regEx = Pattern.compile("\\d*");
+
+                @Override
+                public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                    Matcher matcher = regEx.matcher(text);
+                    if (!matcher.matches()) {
+                        return;
+                    }
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            });
+            return;
+        }
+        this.addCashButton.setVisible(true);
+        this.cancelCash.setVisible(false);
+        this.saveCash.setVisible(false);
+        this.addCashValue.setVisible(false);
+        this.rpLabel.setVisible(false);
     }
 
     private void loadMenu1() {
@@ -64,7 +113,7 @@ public class Menu extends javax.swing.JFrame {
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
-            
+
             String start = changeFormat.format(startTmp);
             String end = changeFormat.format(endTmp);
 
@@ -102,6 +151,57 @@ public class Menu extends javax.swing.JFrame {
 
     }
 
+    private void loadMenu2() {
+        ArrayList<CashEntity> cashList = new ArrayList();
+        if (!isLoadMenu2) {
+            return;
+        }
+        CashDaoImpl cashService = new CashDaoImpl();
+        try {
+            cashList = (ArrayList<CashEntity>) cashService.getAll();
+        } catch (SQLException e) {
+
+        } finally {
+            if (cashList.size() > 0) {
+                CashEntity cash = cashList.get(0);
+                this.cashId = cash.getId();
+                this.cashValue.setText(String.valueOf(cash.getTotalAmount()));
+            }
+
+            EventDaoImpl eventService = new EventDaoImpl();
+            ArrayList<EventEntity> eventList = new ArrayList();
+            try {
+                eventList = (ArrayList<EventEntity>) eventService.getAll();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            } finally {
+                if (eventList.size() > 0) {
+                    int loop = 0;
+                    for (EventEntity e : eventList) {
+                        this.tableEvent.setValueAt(loop, loop, 0);
+                        this.tableEvent.setValueAt(e.getName(), loop, 1);
+                        this.tableEvent.setValueAt(e.getAmount(), loop, 2);
+                        SimpleDateFormat changeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        java.util.Date startTmp = null;
+                        java.util.Date endTmp = null;
+                        try {
+                            startTmp = changeFormat.parse(e.getStartDate() + "");
+                            endTmp = changeFormat.parse(e.getEndDate() + "");
+                        } catch (ParseException ex) {
+                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                        }
+
+                        String start = changeFormat.format(startTmp);
+                        String end = changeFormat.format(endTmp);
+                        this.tableEvent.setValueAt(start, loop, 3);
+                        this.tableEvent.setValueAt(end, loop, 4);
+                    }
+                }
+            }
+
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -122,27 +222,37 @@ public class Menu extends javax.swing.JFrame {
         sMenu4 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
         header = new javax.swing.JPanel();
-        baseMenu = new javax.swing.JPanel();
-        baseMenu1 = new javax.swing.JPanel();
+        layer = new javax.swing.JLayeredPane();
+        menu1 = new javax.swing.JPanel();
         eventLabel = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        startLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        eventValue = new javax.swing.JLabel();
         startValue = new javax.swing.JLabel();
         endValue = new javax.swing.JLabel();
-        eventValue = new javax.swing.JLabel();
-        amountLabel = new javax.swing.JLabel();
         amountValue = new javax.swing.JLabel();
+        amountLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableReceiver = new javax.swing.JTable();
-        baseMenu2 = new javax.swing.JPanel();
-        baseMenu3 = new javax.swing.JPanel();
-        baseMenu4 = new javax.swing.JPanel();
+        menu2 = new javax.swing.JPanel();
+        cashLabel = new javax.swing.JLabel();
+        rpLabel = new javax.swing.JLabel();
+        cashValue = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableEvent = new javax.swing.JTable();
+        addCashValue = new javax.swing.JTextField();
+        createEventButton = new javax.swing.JButton();
+        addCashButton = new javax.swing.JButton();
+        saveCash = new javax.swing.JButton();
+        cancelCash = new javax.swing.JButton();
         badgeLogo = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 204));
+        setPreferredSize(new java.awt.Dimension(1200, 800));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setPreferredSize(new java.awt.Dimension(1200, 800));
 
         subMenu.setBackground(new java.awt.Color(255, 204, 51));
         subMenu.setPreferredSize(new java.awt.Dimension(190, 700));
@@ -256,33 +366,30 @@ public class Menu extends javax.swing.JFrame {
         header.setLayout(headerLayout);
         headerLayout.setHorizontalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 1200, Short.MAX_VALUE)
         );
         headerLayout.setVerticalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        baseMenu.setBackground(new java.awt.Color(255, 255, 255));
-
-        baseMenu1.setBackground(new java.awt.Color(255, 255, 255));
-        baseMenu1.setPreferredSize(new java.awt.Dimension(986, 695));
+        menu1.setBackground(new java.awt.Color(255, 255, 255));
 
         eventLabel.setText("Event           :");
 
-        jLabel1.setText("Start            :");
+        startLabel.setText("Start            :");
 
         jLabel2.setText("End              :");
+
+        eventValue.setText("null");
 
         startValue.setText("null");
 
         endValue.setText("null");
 
-        eventValue.setText("null");
+        amountValue.setText("null");
 
         amountLabel.setText("Jumlah dana : ");
-
-        amountValue.setText("null");
 
         tableReceiver.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -303,150 +410,201 @@ public class Menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableReceiver.setSelectionBackground(new java.awt.Color(255, 153, 102));
-        tableReceiver.getTableHeader().setResizingAllowed(false);
-        tableReceiver.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableReceiverMouseClicked(evt);
-            }
-        });
+        tableReceiver.setMaximumSize(new java.awt.Dimension(900, 64));
         jScrollPane1.setViewportView(tableReceiver);
 
-        javax.swing.GroupLayout baseMenu1Layout = new javax.swing.GroupLayout(baseMenu1);
-        baseMenu1.setLayout(baseMenu1Layout);
-        baseMenu1Layout.setHorizontalGroup(
-            baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(baseMenu1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(baseMenu1Layout.createSequentialGroup()
-                        .addComponent(amountLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(amountValue))
-                    .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(baseMenu1Layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(endValue))
-                        .addGroup(baseMenu1Layout.createSequentialGroup()
-                            .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(eventLabel)
-                                .addComponent(jLabel1))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(startValue)
-                                .addComponent(eventValue)))))
-                .addContainerGap(853, Short.MAX_VALUE))
-            .addGroup(baseMenu1Layout.createSequentialGroup()
+        javax.swing.GroupLayout menu1Layout = new javax.swing.GroupLayout(menu1);
+        menu1.setLayout(menu1Layout);
+        menu1Layout.setHorizontalGroup(
+            menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menu1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addGap(27, 27, 27))
+                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eventLabel)
+                    .addComponent(startLabel)
+                    .addComponent(jLabel2)
+                    .addComponent(amountLabel))
+                .addGap(19, 19, 19)
+                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(amountValue)
+                    .addComponent(endValue)
+                    .addComponent(startValue)
+                    .addComponent(eventValue))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(menu1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
-        baseMenu1Layout.setVerticalGroup(
-            baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(baseMenu1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        menu1Layout.setVerticalGroup(
+            menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menu1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(eventLabel)
                     .addComponent(eventValue))
-                .addGap(18, 18, 18)
-                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                .addGap(26, 26, 26)
+                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(startLabel)
                     .addComponent(startValue))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(18, 18, 18)
+                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(endValue))
-                .addGap(30, 30, 30)
-                .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(amountLabel)
-                    .addComponent(amountValue))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(amountValue)
+                    .addComponent(amountLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        baseMenu2.setBackground(new java.awt.Color(255, 255, 255));
-        baseMenu2.setEnabled(false);
+        menu2.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout baseMenu2Layout = new javax.swing.GroupLayout(baseMenu2);
-        baseMenu2.setLayout(baseMenu2Layout);
-        baseMenu2Layout.setHorizontalGroup(
-            baseMenu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1032, Short.MAX_VALUE)
+        cashLabel.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        cashLabel.setText("Cash : Rp");
+
+        rpLabel.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        rpLabel.setText("Rp");
+
+        cashValue.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        cashValue.setText("null");
+
+        tableEvent.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "No", "Name", "Amount", "Start", "End"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableEvent.setMaximumSize(new java.awt.Dimension(500, 64));
+        tableEvent.setPreferredSize(new java.awt.Dimension(200, 64));
+        jScrollPane3.setViewportView(tableEvent);
+
+        addCashValue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCashValueActionPerformed(evt);
+            }
+        });
+
+        createEventButton.setText("Create Event");
+
+        addCashButton.setText("Add Cash");
+        addCashButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addCashButtonMouseClicked(evt);
+            }
+        });
+
+        saveCash.setText("save");
+        saveCash.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveCashMouseClicked(evt);
+            }
+        });
+        saveCash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveCashActionPerformed(evt);
+            }
+        });
+
+        cancelCash.setText("cancel");
+        cancelCash.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelCashMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout menu2Layout = new javax.swing.GroupLayout(menu2);
+        menu2.setLayout(menu2Layout);
+        menu2Layout.setHorizontalGroup(
+            menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menu2Layout.createSequentialGroup()
+                .addGroup(menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(menu2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(addCashButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(createEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(menu2Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(menu2Layout.createSequentialGroup()
+                                    .addComponent(cashLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cashValue))
+                                .addGroup(menu2Layout.createSequentialGroup()
+                                    .addComponent(rpLabel)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(addCashValue, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(menu2Layout.createSequentialGroup()
+                            .addGap(57, 57, 57)
+                            .addComponent(cancelCash)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(saveCash))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 989, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(202, Short.MAX_VALUE))
         );
-        baseMenu2Layout.setVerticalGroup(
-            baseMenu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 742, Short.MAX_VALUE)
+        menu2Layout.setVerticalGroup(
+            menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menu2Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cashLabel)
+                    .addComponent(cashValue))
+                .addGap(35, 35, 35)
+                .addGroup(menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rpLabel)
+                    .addComponent(addCashValue, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveCash)
+                    .addComponent(cancelCash))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addGroup(menu2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addCashButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(createEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        baseMenu3.setBackground(new java.awt.Color(255, 0, 51));
+        layer.setLayer(menu1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layer.setLayer(menu2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout baseMenu3Layout = new javax.swing.GroupLayout(baseMenu3);
-        baseMenu3.setLayout(baseMenu3Layout);
-        baseMenu3Layout.setHorizontalGroup(
-            baseMenu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 998, Short.MAX_VALUE)
+        javax.swing.GroupLayout layerLayout = new javax.swing.GroupLayout(layer);
+        layer.setLayout(layerLayout);
+        layerLayout.setHorizontalGroup(
+            layerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(menu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 202, Short.MAX_VALUE))
         );
-        baseMenu3Layout.setVerticalGroup(
-            baseMenu3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 694, Short.MAX_VALUE)
-        );
-
-        baseMenu4.setBackground(new java.awt.Color(0, 255, 51));
-
-        javax.swing.GroupLayout baseMenu4Layout = new javax.swing.GroupLayout(baseMenu4);
-        baseMenu4.setLayout(baseMenu4Layout);
-        baseMenu4Layout.setHorizontalGroup(
-            baseMenu4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 998, Short.MAX_VALUE)
-        );
-        baseMenu4Layout.setVerticalGroup(
-            baseMenu4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 694, Short.MAX_VALUE)
+        layerLayout.setVerticalGroup(
+            layerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layerLayout.createSequentialGroup()
+                .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(menu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 808, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout baseMenuLayout = new javax.swing.GroupLayout(baseMenu);
-        baseMenu.setLayout(baseMenuLayout);
-        baseMenuLayout.setHorizontalGroup(
-            baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(baseMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 1041, Short.MAX_VALUE)
-            .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(baseMenuLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(baseMenu2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
-            .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(baseMenuLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(baseMenu3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
-            .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(baseMenuLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(baseMenu4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
-        );
-        baseMenuLayout.setVerticalGroup(
-            baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(baseMenuLayout.createSequentialGroup()
-                .addComponent(baseMenu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(baseMenuLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(baseMenu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(baseMenuLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(baseMenu3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(7, Short.MAX_VALUE)))
-            .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(baseMenuLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(baseMenu4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(7, Short.MAX_VALUE)))
-        );
+        menu1.getAccessibleContext().setAccessibleParent(sMenu1);
 
         badgeLogo.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -470,8 +628,9 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(subMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
                     .addComponent(badgeLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(header, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(baseMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -482,7 +641,7 @@ public class Menu extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(subMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(baseMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(layer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
 
@@ -490,11 +649,11 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1396, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
         );
 
         pack();
@@ -539,74 +698,67 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_sMenu4MouseEntered
 
     private void sMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu1MouseClicked
-        baseMenu1.setVisible(true);
-        this.isLoadMenu1 = true;
-        loadMenu1();
-        baseMenu2.setVisible(false);
-        baseMenu3.setVisible(false);
-        baseMenu4.setVisible(false);
+        this.menu1.setVisible(true);
+        this.loadMenu1();
+        disableMenuExcept("menu1");
+
     }//GEN-LAST:event_sMenu1MouseClicked
 
     private void sMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu2MouseClicked
-        baseMenu2.setVisible(true);
-        baseMenu1.setVisible(false);
-        baseMenu3.setVisible(false);
-        baseMenu4.setVisible(false);
+        this.menu2.setVisible(true);
+        this.isLoadMenu2 = true;
+        hideOrShowAddCash(false);
+        this.loadMenu2();
+        disableMenuExcept("menu2");
     }//GEN-LAST:event_sMenu2MouseClicked
 
     private void sMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu3MouseClicked
-        baseMenu3.setVisible(true);
-        baseMenu1.setVisible(false);
-        baseMenu2.setVisible(false);
-        baseMenu4.setVisible(false);
+//        baseMenu3.setVisible(true);
+//        baseMenu1.setVisible(false);
+//        baseMenu2.setVisible(false);
+//        baseMenu4.setVisible(false);
     }//GEN-LAST:event_sMenu3MouseClicked
 
     private void sMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseClicked
-        baseMenu4.setVisible(true);
-        baseMenu1.setVisible(false);
-        baseMenu2.setVisible(false);
-        baseMenu3.setVisible(false);
+//        baseMenu4.setVisible(true);
+//        baseMenu1.setVisible(false);
+//        baseMenu2.setVisible(false);
+//        baseMenu3.setVisible(false);
     }//GEN-LAST:event_sMenu4MouseClicked
 
-    private void tableReceiverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableReceiverMouseClicked
-        if (evt.getClickCount() == 2 && evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
-            int row = tableReceiver.rowAtPoint(evt.getPoint());
-            int col = tableReceiver.columnAtPoint(evt.getPoint());
-            if (row >= 0 && col >= 0) {
-                if (col == 3) {
-                    boolean isApproved = tableReceiver.getValueAt(row, col) == "Approved" ? true : false;
-                    if (!isApproved) {
-                        int dialogButton = JOptionPane.YES_NO_OPTION;
-                        int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure want to approve this ?", "Warning", dialogButton);
-                        if (dialogResult == JOptionPane.YES_OPTION) {
-                            ReceiverDaoImpl receiverService = new ReceiverDaoImpl();
-                            try {
-                                ReceiverEntity receiver = new ReceiverEntity();
-                                
-                                String name = (String) tableReceiver.getValueAt(row, 1);
-                                String code = (String) tableReceiver.getValueAt(row, 2);
-                                String str = (String) tableReceiver.getValueAt(row, 4);
-                                String[] splittedStr = str.split(",");
-                                
-                                receiver.setId(Integer.parseInt(splittedStr[0]));
-                                receiver.setEventId(Integer.parseInt(splittedStr[1]));
-                                receiver.setApproved(true);
-                                receiver.setCode(code);
-                                receiver.setName(name);
-                                
-                                receiverService.update(receiver);
-                            } catch (SQLException ex) {
-                                JOptionPane.showMessageDialog(this, ex.getMessage());
-                            } finally {
-                                loadMenu1();
-                            }
-                        }
-                    }
+    private void addCashValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCashValueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addCashValueActionPerformed
 
-                }
-            }
+    private void addCashButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addCashButtonMouseClicked
+        hideOrShowAddCash(true);
+    }//GEN-LAST:event_addCashButtonMouseClicked
+
+    private void cancelCashMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelCashMouseClicked
+        hideOrShowAddCash(false);
+    }//GEN-LAST:event_cancelCashMouseClicked
+
+    private void saveCashMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveCashMouseClicked
+        // String val = this.addCashValue
+    }//GEN-LAST:event_saveCashMouseClicked
+
+    private void saveCashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCashActionPerformed
+        int amount = Integer.parseInt(this.cashValue.getText());
+        int amount2 = Integer.parseInt(this.addCashValue.getText());
+        int total = amount + amount2;
+        CashDaoImpl cashService = new CashDaoImpl();
+        CashEntity cash = new CashEntity();
+        cash.setId(this.cashId);
+        cash.setTotalAmount(String.valueOf(total));
+        try {
+            cashService.update(cash);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }finally{
+            this.cashValue.setText(cash.getTotalAmount());
+            hideOrShowAddCash(false);
         }
-    }//GEN-LAST:event_tableReceiverMouseClicked
+    }//GEN-LAST:event_saveCashActionPerformed
 
     /**
      * @param args the command line arguments
@@ -641,40 +793,47 @@ public class Menu extends javax.swing.JFrame {
             public void run() {
                 Menu menu = new Menu();
                 menu.setVisible(true);
-                menu.baseMenu.setVisible(false);
-                menu.baseMenu1.setVisible(true);
-                menu.baseMenu2.setVisible(false);
             }
         });
     }
     private boolean isLoadMenu1;
+    private boolean isLoadMenu2;
+    private int cashId;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addCashButton;
+    private javax.swing.JTextField addCashValue;
     private javax.swing.JLabel amountLabel;
     private javax.swing.JLabel amountValue;
     private javax.swing.JPanel badgeLogo;
-    private javax.swing.JPanel baseMenu;
-    private javax.swing.JPanel baseMenu1;
-    private javax.swing.JPanel baseMenu2;
-    private javax.swing.JPanel baseMenu3;
-    private javax.swing.JPanel baseMenu4;
+    private javax.swing.JButton cancelCash;
+    private javax.swing.JLabel cashLabel;
+    private javax.swing.JLabel cashValue;
+    private javax.swing.JButton createEventButton;
     private javax.swing.JLabel endValue;
     private javax.swing.JLabel eventLabel;
     private javax.swing.JLabel eventValue;
     private javax.swing.JPanel header;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JLayeredPane layer;
+    private javax.swing.JPanel menu1;
+    private javax.swing.JPanel menu2;
+    private javax.swing.JLabel rpLabel;
     private javax.swing.JLabel sMenu1;
     private javax.swing.JLabel sMenu2;
     private javax.swing.JLabel sMenu3;
     private javax.swing.JLabel sMenu4;
+    private javax.swing.JButton saveCash;
+    private javax.swing.JLabel startLabel;
     private javax.swing.JLabel startValue;
     private javax.swing.JPanel subMenu;
+    private javax.swing.JTable tableEvent;
     private javax.swing.JTable tableReceiver;
     // End of variables declaration//GEN-END:variables
 }

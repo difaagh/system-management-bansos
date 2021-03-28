@@ -70,7 +70,7 @@ public class CashEntity {
     }
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "udated_date")
+    @Column(name = "updated_date")
     private Date updatedDate = new Date();
 
     public Date getUpdatedDate() {
@@ -82,13 +82,13 @@ public class CashEntity {
     }
 
     @Column(name = "total_amount")
-    private int totalAmount;
+    private String totalAmount;
     
-    public int getTotalAmount(){
+    public String getTotalAmount(){
         return this.totalAmount;
     }
     
-    public void setTotalAmount(int totalAmount){
+    public void setTotalAmount(String totalAmount){
         this.totalAmount = totalAmount;
     }
 }
