@@ -23,9 +23,7 @@
  */
 package com.msb.app.management.system.bansos.service.receiver;
 
-import com.msb.app.management.system.bansos.service.receiver.ReceiverDao;
 import com.msb.app.management.system.bansos.helper.HibernateSessionFactory;
-import com.msb.app.management.system.bansos.model.PackageEntity;
 import com.msb.app.management.system.bansos.model.ReceiverEntity;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,6 +50,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -69,6 +68,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -86,6 +86,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             Hibernate.initialize(receiver);
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -97,18 +98,19 @@ public class ReceiverDaoImpl implements ReceiverDao {
     @Override
     public Collection getAllByEventId(int event_id) throws SQLException {
         Session session = null;
-        List listPkg = new ArrayList<PackageEntity>();
+        List listReceiver = new ArrayList<ReceiverEntity>();
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
-            listPkg = session.createCriteria(PackageEntity.class).add(Restrictions.eq("eventId", event_id)).list();
+            listReceiver = session.createCriteria(ReceiverEntity.class).add(Restrictions.eq("eventId", event_id)).list();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
             }
         }
-        return listPkg;
+        return listReceiver;
     }
 
     @Override
@@ -121,6 +123,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -134,10 +137,11 @@ public class ReceiverDaoImpl implements ReceiverDao {
         ReceiverEntity receiver = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
-            receiver = (ReceiverEntity) session.load(ReceiverEntity.class, code);
+            receiver = (ReceiverEntity) session.createCriteria(ReceiverEntity.class).add(Restrictions.eq("code", code)).uniqueResult();
             Hibernate.initialize(receiver);
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

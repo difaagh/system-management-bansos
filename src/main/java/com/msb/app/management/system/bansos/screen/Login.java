@@ -5,7 +5,7 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
-import com.msb.app.management.system.bansos.helper.Security;
+import com.msb.app.management.system.bansos.helper.KeycloakService;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -116,7 +116,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameFieldActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        Security security = new Security();
+        KeycloakService security = new KeycloakService();
         try {
             int statusLogin = security.login(this.usernameField.getText(), this.passwordField.getPassword());
             if (statusLogin == 200) {

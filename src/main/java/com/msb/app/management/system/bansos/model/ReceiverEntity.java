@@ -23,21 +23,22 @@
  */
 package com.msb.app.management.system.bansos.model;
 
-import java.util.Date;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import org.hibernate.annotations.CreationTimestamp;
+import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author difaagh
  */
+@Entity
+@Table(name = "receiver")
 public class ReceiverEntity {
-        @Id
+    @Id
     @GeneratedValue(generator = "incrementator")
     @GenericGenerator(name = "incrementator", strategy = "increment")
     private int id;
@@ -49,10 +50,6 @@ public class ReceiverEntity {
     public void setId(int id) {
         this.id = id;
     }
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date")
-    private Date createdDate = new Date();
 
     @Column(name = "name")
     private String name;
@@ -90,8 +87,8 @@ public class ReceiverEntity {
     @Column(name = "code")
     private String code;
 
-    public int getCode() {
-        return this.eventId;
+    public String getCode() {
+        return this.code;
     }
 
     public void setCode(String code) {

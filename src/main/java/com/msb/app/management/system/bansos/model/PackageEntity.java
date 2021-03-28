@@ -54,10 +54,6 @@ public class PackageEntity {
     public void setId(int id) {
         this.id = id;
     }
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date")
-    private Date createdDate = new Date();
 
     @Column(name = "name")
     private String name;

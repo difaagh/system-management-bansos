@@ -6,10 +6,18 @@
 package com.msb.app.management.system.bansos.screen;
 
 import com.msb.app.management.system.bansos.service.event.EventDaoImpl;
+import com.msb.app.management.system.bansos.service.receiver.ReceiverDaoImpl;
 import com.msb.app.management.system.bansos.model.EventEntity;
+import com.msb.app.management.system.bansos.model.ReceiverEntity;
 import java.awt.Color;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -22,25 +30,64 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
+        this.isLoadMenu1 = true;
+        TableColumnModel tcm = this.tableEvent.getColumnModel();
+        TableColumn column = tcm.getColumn(4);
+        column.setMinWidth(0);
+        column.setMaxWidth(0);
+        column.setPreferredWidth(0);
+        loadMenu1();
+
     }
-    
-    private void loadMenu1(){
+
+    private void loadMenu1() {
         EventEntity event = null;
-        if(!isLoadMenu1)return;
+        if (!isLoadMenu1) {
+            return;
+        }
         EventDaoImpl eventService = new EventDaoImpl();
-        try{
-         event = eventService.getLatest();
-        }catch(SQLException e){
+        try {
+            event = eventService.getLatest();
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        }finally{
-            if(event == null) return;
+        } finally {
+            if (event == null) {
+                return;
+            }
             this.eventValue.setText(event.getName());
-            this.endValue.setText(event.getStartDate().toString());
+            this.endValue.setText(event.getEndDate().toString());
             this.startValue.setText(event.getStartDate().toString());
             this.amountValue.setText(event.getAmount().toString());
+            Collection<ReceiverEntity> listReceiver = null;
+            ReceiverDaoImpl receiverService = new ReceiverDaoImpl();
+            int colTable = 0;
+            try {
+                listReceiver = receiverService.getAllByEventId(event.getId());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            } finally {
+                if (listReceiver.isEmpty()) {
+                    return;
+                }
+                DefaultTableModel newTableModel = (DefaultTableModel) this.tableEvent.getModel();
+                newTableModel.setRowCount(listReceiver.size());
+                this.tableEvent.setModel(newTableModel);
+                for (ReceiverEntity receiver : listReceiver) {
+                    String isApproved = receiver.approved() ? "Approved" : "Approve";
+                    this.tableEvent.setValueAt(colTable + 1, colTable, 0);
+                    this.tableEvent.setValueAt(receiver.getName(), colTable, 1);
+                    this.tableEvent.setValueAt(receiver.getCode(), colTable, 2);
+                    this.tableEvent.setValueAt(isApproved, colTable, 3);
+                    String str = receiver.getId() + "," + receiver.getEventId();
+                    this.tableEvent.setValueAt(str, colTable, 4);
+                    colTable++;
+                }
+            }
+
         }
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,6 +118,8 @@ public class Menu extends javax.swing.JFrame {
         eventValue = new javax.swing.JLabel();
         amountLabel = new javax.swing.JLabel();
         amountValue = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableEvent = new javax.swing.JTable();
         baseMenu2 = new javax.swing.JPanel();
         baseMenu3 = new javax.swing.JPanel();
         baseMenu4 = new javax.swing.JPanel();
@@ -202,7 +251,8 @@ public class Menu extends javax.swing.JFrame {
 
         baseMenu.setBackground(new java.awt.Color(255, 255, 255));
 
-        baseMenu1.setBackground(new java.awt.Color(204, 255, 255));
+        baseMenu1.setBackground(new java.awt.Color(255, 255, 255));
+        baseMenu1.setPreferredSize(new java.awt.Dimension(986, 695));
 
         eventLabel.setText("Event           :");
 
@@ -219,6 +269,34 @@ public class Menu extends javax.swing.JFrame {
         amountLabel.setText("Jumlah dana : ");
 
         amountValue.setText("null");
+
+        tableEvent.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "No", "Name", "Code", "Status", "hidden"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableEvent.setSelectionBackground(new java.awt.Color(255, 153, 102));
+        tableEvent.getTableHeader().setResizingAllowed(false);
+        tableEvent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableEventMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableEvent);
 
         javax.swing.GroupLayout baseMenu1Layout = new javax.swing.GroupLayout(baseMenu1);
         baseMenu1.setLayout(baseMenu1Layout);
@@ -244,7 +322,11 @@ public class Menu extends javax.swing.JFrame {
                             .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(startValue)
                                 .addComponent(eventValue)))))
-                .addContainerGap(877, Short.MAX_VALUE))
+                .addContainerGap(853, Short.MAX_VALUE))
+            .addGroup(baseMenu1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addGap(27, 27, 27))
         );
         baseMenu1Layout.setVerticalGroup(
             baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,15 +339,16 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(startValue))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(endValue))
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(baseMenu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(amountLabel)
                     .addComponent(amountValue))
-                .addContainerGap(556, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         baseMenu2.setBackground(new java.awt.Color(255, 255, 255));
@@ -312,7 +395,7 @@ public class Menu extends javax.swing.JFrame {
         baseMenu.setLayout(baseMenuLayout);
         baseMenuLayout.setHorizontalGroup(
             baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(baseMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(baseMenu1, javax.swing.GroupLayout.DEFAULT_SIZE, 1041, Short.MAX_VALUE)
             .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(baseMenuLayout.createSequentialGroup()
                     .addContainerGap()
@@ -331,7 +414,9 @@ public class Menu extends javax.swing.JFrame {
         );
         baseMenuLayout.setVerticalGroup(
             baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(baseMenu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(baseMenuLayout.createSequentialGroup()
+                .addComponent(baseMenu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(baseMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(baseMenuLayout.createSequentialGroup()
                     .addContainerGap()
@@ -469,6 +554,45 @@ public class Menu extends javax.swing.JFrame {
         baseMenu3.setVisible(false);
     }//GEN-LAST:event_sMenu5MouseClicked
 
+    private void tableEventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEventMouseClicked
+        if (evt.getClickCount() == 2 && evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
+            int row = tableEvent.rowAtPoint(evt.getPoint());
+            int col = tableEvent.columnAtPoint(evt.getPoint());
+            if (row >= 0 && col >= 0) {
+                if (col == 2) {
+                    boolean isApproved = tableEvent.getValueAt(row, col) == "Approved" ? true : false;
+                    System.out.println(tableEvent.getValueAt(row, 3));
+                    if (!isApproved) {
+                        int dialogButton = JOptionPane.YES_NO_OPTION;
+                        int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure want to approve this ?", "Warning", dialogButton);
+                        if (dialogResult == JOptionPane.YES_OPTION) {
+                            ReceiverDaoImpl receiverService = new ReceiverDaoImpl();
+                            try {
+                                ReceiverEntity receiver = new ReceiverEntity();
+                                String str = (String) tableEvent.getValueAt(row, 3);
+                                String name = (String) tableEvent.getValueAt(row, 0);
+                                String[] splittedStr = str.split(",");
+                                receiver.setId(Integer.parseInt(splittedStr[0]));
+                                receiver.setEventId(Integer.parseInt(splittedStr[1]));
+                                receiver.setApproved(true);
+                                receiver.setCode((String) tableEvent.getValueAt(row, 1));
+                                receiver.setName(name);
+                                receiverService.update(receiver);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                JOptionPane.showMessageDialog(this, ex.getMessage());
+                            } finally {
+                                loadMenu1();
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }//GEN-LAST:event_tableEventMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -500,11 +624,11 @@ public class Menu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-               Menu menu =  new Menu();
-               menu.setVisible(true);
-               menu.baseMenu.setVisible(true);
-               menu.baseMenu1.setVisible(true);
-               menu.baseMenu2.setVisible(false);
+                Menu menu = new Menu();
+                menu.setVisible(true);
+                menu.baseMenu.setVisible(true);
+                menu.baseMenu1.setVisible(true);
+                menu.baseMenu2.setVisible(false);
             }
         });
     }
@@ -525,6 +649,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -535,5 +660,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel sMenu4;
     private javax.swing.JLabel sMenu5;
     private javax.swing.JLabel startValue;
+    private javax.swing.JTable tableEvent;
     // End of variables declaration//GEN-END:variables
 }
