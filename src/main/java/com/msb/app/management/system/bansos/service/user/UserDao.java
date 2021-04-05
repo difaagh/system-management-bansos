@@ -25,7 +25,6 @@ package com.msb.app.management.system.bansos.service.user;
 
 import com.msb.app.management.system.bansos.model.UserEntity;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**

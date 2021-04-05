@@ -32,7 +32,6 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  *
@@ -94,8 +93,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public String login(String username, String password) throws SQLException {
-         Dotenv dotenv = Dotenv.load();
-        if("development".equals(dotenv.get("JAVA_ENV"))) return "admin";
         Session session = null;
         ArrayList<UserEntity> userList = new ArrayList();
         

@@ -7,6 +7,7 @@ package com.msb.app.management.system.bansos.screen;
 
 import com.msb.app.management.system.bansos.model.UserEntity;
 import com.msb.app.management.system.bansos.service.user.UserDaoImpl;
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -120,6 +121,18 @@ public class Login extends javax.swing.JFrame {
         UserDaoImpl userService = new UserDaoImpl();
         UserEntity user = new UserEntity();
         try {
+            Dotenv dotenv = Dotenv.load();
+            String dev = dotenv.get("JAVA_ENV");
+            if ("development".equals(dev)) {
+                Menu menu = new Menu();
+                String userName = this.usernameField.getText().length() > 0 ? this.usernameField.getText() : "anonymous";
+                menu.setUsername(userName);
+                menu.setRole("admin");
+                this.setVisible(false);
+                this.dispose();
+                menu.setVisible(true);
+                return;
+            }
             String status = userService.login(this.usernameField.getText(), String.valueOf(this.passwordField.getPassword()));
             if (!status.equals("false")) {
                 Menu menu = new Menu();
