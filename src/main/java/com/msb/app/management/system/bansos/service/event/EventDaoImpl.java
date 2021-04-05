@@ -78,13 +78,12 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public EventEntity getById(int event_id) throws SQLException {
+    public EventEntity getById(int id) throws SQLException {
         Session session = null;
         EventEntity event = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
-            event = (EventEntity) session.load(EventEntity.class, event_id);
-            Hibernate.initialize(event);
+            event = session.get(EventEntity.class, id);
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {

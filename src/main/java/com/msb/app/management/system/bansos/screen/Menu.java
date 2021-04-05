@@ -44,19 +44,25 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         this.isLoadMenu1 = true;
         disableMenuExcept("menu1");
-        TableColumnModel tcm = this.tableEvent.getColumnModel();
+        TableColumnModel tcm = this.tableReceiver.getColumnModel();
         this.usernameVal = "";
         TableColumn column = tcm.getColumn(4);
         column.setMinWidth(0);
         column.setMaxWidth(0);
         column.setPreferredWidth(0);
+        TableColumnModel tcm2 = this.tableEvent.getColumnModel();
+        TableColumn column2 = tcm2.getColumn(5);
+        column2.setMinWidth(0);
+        column2.setMaxWidth(0);
+        column2.setPreferredWidth(0);
     }
 
     public void setUsername(String username) {
         this.usernameVal = username;
         this.username.setText(this.usernameVal);
     }
-    public void setRole(String role){
+
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -140,17 +146,17 @@ public class Menu extends javax.swing.JFrame {
                 if (listReceiver.isEmpty()) {
                     return;
                 }
-                DefaultTableModel newTableModel = (DefaultTableModel) this.tableEvent.getModel();
+                DefaultTableModel newTableModel = (DefaultTableModel) this.tableReceiver.getModel();
                 newTableModel.setRowCount(listReceiver.size());
-                this.tableEvent.setModel(newTableModel);
+                this.tableReceiver.setModel(newTableModel);
                 for (ReceiverEntity receiver : listReceiver) {
                     String isApproved = receiver.approved() ? "Approved" : "Approve";
-                    this.tableEvent.setValueAt(colTable + 1, colTable, 0);
-                    this.tableEvent.setValueAt(receiver.getName(), colTable, 1);
-                    this.tableEvent.setValueAt(receiver.getCode(), colTable, 2);
-                    this.tableEvent.setValueAt(isApproved, colTable, 3);
+                    this.tableReceiver.setValueAt(colTable + 1, colTable, 0);
+                    this.tableReceiver.setValueAt(receiver.getName(), colTable, 1);
+                    this.tableReceiver.setValueAt(receiver.getCode(), colTable, 2);
+                    this.tableReceiver.setValueAt(isApproved, colTable, 3);
                     String str = receiver.getId() + "," + receiver.getEventId();
-                    this.tableEvent.setValueAt(str, colTable, 4);
+                    this.tableReceiver.setValueAt(str, colTable, 4);
                     colTable++;
                 }
             }
@@ -185,9 +191,9 @@ public class Menu extends javax.swing.JFrame {
                 if (eventList.size() > 0) {
                     int loop = 0;
                     for (EventEntity e : eventList) {
-                        this.tableReceiver.setValueAt(loop + 1, loop, 0);
-                        this.tableReceiver.setValueAt(e.getName(), loop, 1);
-                        this.tableReceiver.setValueAt(e.getAmount(), loop, 2);
+                        this.tableEvent.setValueAt(loop + 1, loop, 0);
+                        this.tableEvent.setValueAt(e.getName(), loop, 1);
+                        this.tableEvent.setValueAt(e.getAmount(), loop, 2);
                         SimpleDateFormat changeFormat = new SimpleDateFormat("yyyy-MM-dd");
                         java.util.Date startTmp = null;
                         java.util.Date endTmp = null;
@@ -200,8 +206,9 @@ public class Menu extends javax.swing.JFrame {
 
                         String start = changeFormat.format(startTmp);
                         String end = changeFormat.format(endTmp);
-                        this.tableReceiver.setValueAt(start, loop, 3);
-                        this.tableReceiver.setValueAt(end, loop, 4);
+                        this.tableEvent.setValueAt(start, loop, 3);
+                        this.tableEvent.setValueAt(end, loop, 4);
+                        this.tableEvent.setValueAt(String.valueOf(e.getId()), loop, 5);
                         loop++;
                     }
                 }
@@ -209,7 +216,6 @@ public class Menu extends javax.swing.JFrame {
 
         }
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -242,13 +248,13 @@ public class Menu extends javax.swing.JFrame {
         amountValue = new javax.swing.JLabel();
         amountLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableEvent = new javax.swing.JTable();
+        tableReceiver = new javax.swing.JTable();
         menu2 = new javax.swing.JPanel();
         cashLabel = new javax.swing.JLabel();
         rpLabel = new javax.swing.JLabel();
         cashValue = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableReceiver = new javax.swing.JTable();
+        tableEvent = new javax.swing.JTable();
         addCashValue = new javax.swing.JTextField();
         createEventButton = new javax.swing.JButton();
         addCashButton = new javax.swing.JButton();
@@ -391,7 +397,7 @@ public class Menu extends javax.swing.JFrame {
 
         amountLabel.setText("Jumlah dana : ");
 
-        tableEvent.setModel(new javax.swing.table.DefaultTableModel(
+        tableReceiver.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -410,13 +416,13 @@ public class Menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableEvent.setMaximumSize(new java.awt.Dimension(900, 64));
-        tableEvent.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableReceiver.setMaximumSize(new java.awt.Dimension(900, 64));
+        tableReceiver.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableEventMouseClicked(evt);
+                tableReceiverMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tableEvent);
+        jScrollPane1.setViewportView(tableReceiver);
 
         javax.swing.GroupLayout menu1Layout = new javax.swing.GroupLayout(menu1);
         menu1.setLayout(menu1Layout);
@@ -474,28 +480,33 @@ public class Menu extends javax.swing.JFrame {
         cashValue.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         cashValue.setText("0");
 
-        tableReceiver.setModel(new javax.swing.table.DefaultTableModel(
+        tableEvent.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "No", "Name", "Amount", "Start", "End"
+                "No", "Name", "Amount", "Start", "End", "Hiden"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tableReceiver.setMaximumSize(new java.awt.Dimension(500, 64));
-        tableReceiver.setPreferredSize(new java.awt.Dimension(200, 64));
-        jScrollPane3.setViewportView(tableReceiver);
+        tableEvent.setMaximumSize(new java.awt.Dimension(500, 64));
+        tableEvent.setPreferredSize(new java.awt.Dimension(200, 64));
+        tableEvent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableEventMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tableEvent);
 
         addCashValue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -786,20 +797,20 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveCashActionPerformed
 
-    private void tableEventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEventMouseClicked
+    private void tableReceiverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableReceiverMouseClicked
         if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
-            int column = tableEvent.columnAtPoint(evt.getPoint());
+            int column = tableReceiver.columnAtPoint(evt.getPoint());
             if (column == 3) {
-                int row = tableEvent.rowAtPoint(evt.getPoint());
-                boolean isApproved = tableEvent.getValueAt(row, column) == "Approved" ? true : false;
+                int row = tableReceiver.rowAtPoint(evt.getPoint());
+                boolean isApproved = tableReceiver.getValueAt(row, column) == "Approved" ? true : false;
                 if (!isApproved) {
                     int dialogApprove = JOptionPane.YES_NO_OPTION;
                     int dialogResult = JOptionPane.showConfirmDialog(null, "Do you wanna approve this one ?", "Warning", dialogApprove);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         ReceiverEntity receiver = new ReceiverEntity();
-                        String name = (String) tableEvent.getValueAt(row, 1);
-                        String code = (String) tableEvent.getValueAt(row, 2);
-                        String temp = (String) tableEvent.getValueAt(row, 4);
+                        String name = (String) tableReceiver.getValueAt(row, 1);
+                        String code = (String) tableReceiver.getValueAt(row, 2);
+                        String temp = (String) tableReceiver.getValueAt(row, 4);
                         String id = temp.split(",")[0];
                         String eventId = temp.split(",")[1];
                         receiver.setId(Integer.parseInt(id));
@@ -820,9 +831,8 @@ public class Menu extends javax.swing.JFrame {
 
                 }
             }
-
         }
-    }//GEN-LAST:event_tableEventMouseClicked
+    }//GEN-LAST:event_tableReceiverMouseClicked
 
     private void createEventButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createEventButtonMouseClicked
         CreateEvent createEvent = new CreateEvent();
@@ -831,6 +841,17 @@ public class Menu extends javax.swing.JFrame {
         createEvent.setMenu(this);
         createEvent.setVisible(true);
     }//GEN-LAST:event_createEventButtonMouseClicked
+
+    private void tableEventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEventMouseClicked
+       if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
+        int row = tableEvent.rowAtPoint(evt.getPoint());
+        String id = (String) this.tableEvent.getValueAt(row, 5);
+        EventDetail eventDetail = new EventDetail();
+        eventDetail.setEvent(id, this.role, this.cashValue.getText());
+        eventDetail.renderAll();
+        eventDetail.setVisible(true);
+       }
+    }//GEN-LAST:event_tableEventMouseClicked
 
     /**
      * @param args the command line arguments

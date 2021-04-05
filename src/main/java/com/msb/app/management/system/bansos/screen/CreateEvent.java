@@ -81,9 +81,6 @@ public class CreateEvent extends javax.swing.JFrame {
         DateTime oneDayAgo = dateNow.minusDays(1);
         DateTime start = new DateTime(this.startDateVal.getDate());
         boolean dateToday = oneDayAgo.getMillis() > start.getMillis();
-        System.out.println(start);
-        System.out.println(dateNow);
-        System.out.println(dateToday);
 
         if (dateToday) {
             JOptionPane.showMessageDialog(this, "Start date cannot less than today!");

@@ -37,8 +37,6 @@ CREATE TABLE `package` (
   `event_id` int NOT NULL,
   `qty` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `event_id` (`event_id`),
-  CONSTRAINT `package_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -49,8 +47,6 @@ CREATE TABLE `receiver` (
   `event_id` int NOT NULL,
   `code` varchar(255) DEFAULT NULL,
   `approved` tinyint(1) DEFAULT NULL,
-  KEY `event_id` (`event_id`),
-  CONSTRAINT `receiver_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

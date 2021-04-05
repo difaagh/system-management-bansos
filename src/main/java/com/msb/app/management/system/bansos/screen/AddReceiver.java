@@ -24,7 +24,11 @@
 package com.msb.app.management.system.bansos.screen;
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import com.msb.app.management.system.bansos.model.ReceiverEntity;
+import com.msb.app.management.system.bansos.service.receiver.ReceiverDaoImpl;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -165,15 +169,52 @@ public class AddReceiver extends javax.swing.JFrame {
 
     private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
         ArrayList<String> data = new ArrayList();
+        if (this.fieldName.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Please fulfill all required field");
+            return;
+        }
+        if (this.fieldCode.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Please fulfill all required field");
+            return;
+        }
         data.add(fieldName.getText());
         data.add(fieldCode.getText());
-        this.createEvent.clearDataTableReceiver();
-        this.createEvent.setDataTableReceiver(data);
-        this.createEvent.lastRowReceiver += 1;
-        this.createEvent.renderTableReceiver();
-        this.setVisible(false);
-        this.dispose();
+        if ("eventDetail".equals(this.setUsedScreenFor)) {
+            transferDataToEventDetail(data);
+            this.setVisible(false);
+            this.dispose();
+        } else {
+            this.createEvent.clearDataTableReceiver();
+            this.createEvent.setDataTableReceiver(data);
+            this.createEvent.lastRowReceiver += 1;
+            this.createEvent.renderTableReceiver();
+            this.setVisible(false);
+            this.dispose();
+        }
     }//GEN-LAST:event_saveButtonMouseClicked
+
+    public void setEventDetail(EventDetail detail) {
+        this.detail = detail;
+    }
+
+    private void transferDataToEventDetail(ArrayList<String> data) {
+        ReceiverEntity receiver = new ReceiverEntity();
+        receiver.setName(data.get(0));
+        receiver.setCode(data.get(1));
+        receiver.setEventId(this.eventId);
+        ReceiverDaoImpl receiverService = new ReceiverDaoImpl();
+        try {
+            receiverService.create(receiver);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        } finally {
+            this.detail.renderTableReceiver();
+        }
+    }
+
+    public ArrayList<String> getData() {
+        return this.data;
+    }
 
     private void generateCdButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_generateCdButtonMouseClicked
         String code = NanoIdUtils.randomNanoId();
@@ -214,8 +255,11 @@ public class AddReceiver extends javax.swing.JFrame {
             }
         });
     }
-
+    public String setUsedScreenFor;
+    public int eventId;
     private CreateEvent createEvent;
+    private EventDetail detail;
+    private ArrayList<String> data;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField fieldCode;

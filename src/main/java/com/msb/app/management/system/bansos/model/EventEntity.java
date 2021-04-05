@@ -43,6 +43,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class EventEntity {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(generator = "incrementator")
     @GenericGenerator(name = "incrementator", strategy = "increment")
     private int id;

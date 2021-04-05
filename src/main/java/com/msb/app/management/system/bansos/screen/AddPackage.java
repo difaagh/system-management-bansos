@@ -23,7 +23,13 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
+import com.msb.app.management.system.bansos.model.PackageDaoImpl;
+import com.msb.app.management.system.bansos.model.PackageEntity;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -37,8 +43,8 @@ public class AddPackage extends javax.swing.JFrame {
     public AddPackage() {
         initComponents();
     }
-    
-    public void setCreateEvent(CreateEvent createEvent){
+
+    public void setCreateEvent(CreateEvent createEvent) {
         this.createEvent = createEvent;
     }
 
@@ -162,22 +168,64 @@ public class AddPackage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
+        if (this.fieldName.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Please fulfill all required field");
+            return;
+        }
+        if (this.fieldAmount.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Please fulfill all required field");
+            return;
+        }
+        if (this.fieldQuantity.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Please fulfill all required field");
+            return;
+        }
         ArrayList<String> data = new ArrayList();
         data.add(fieldName.getText());
         data.add(fieldAmount.getText());
         data.add(fieldQuantity.getText());
-        this.createEvent.clearDataTablePkg();
-        this.createEvent.setDataTablePkg(data);
-        this.createEvent.lastRowPkg += 1;
-        this.createEvent.renderTablePkg();
-        this.setVisible(false);
-        this.dispose();
+        if ("eventDetail".equals(this.setUsedScreenFor)) {
+            transferDataToEventDetail(data);
+            this.setVisible(false);
+            this.dispose();
+        } else {
+            this.createEvent.clearDataTablePkg();
+            this.createEvent.setDataTablePkg(data);
+            this.createEvent.lastRowPkg += 1;
+            this.createEvent.renderTablePkg();
+            this.setVisible(false);
+            this.dispose();
+        }
     }//GEN-LAST:event_saveButtonMouseClicked
+
+    private void transferDataToEventDetail(ArrayList<String> data) {
+        PackageDaoImpl pkg = new PackageDaoImpl();
+        PackageEntity pkgE = new PackageEntity();
+        pkgE.setEventId(this.eventId);
+        pkgE.setName(data.get(0));
+        pkgE.setPrice(data.get(1));
+        pkgE.setQty(2);
+        try {
+            pkg.create(pkgE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        } finally {
+            this.detail.renderTablePkg();
+        }
+    }
+
+    public ArrayList<String> getData() {
+        return this.data;
+    }
 
     private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_cancelButtonMouseClicked
+
+    public void setEventDetail(EventDetail detail) {
+        this.detail = detail;
+    }
 
     /**
      * @param args the command line arguments
@@ -213,8 +261,11 @@ public class AddPackage extends javax.swing.JFrame {
             }
         });
     }
-    
+    public int eventId;
+    public String setUsedScreenFor;
     private CreateEvent createEvent;
+    private EventDetail detail;
+    private ArrayList<String> data;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField fieldAmount;

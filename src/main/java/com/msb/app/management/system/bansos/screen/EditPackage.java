@@ -23,6 +23,13 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
+import com.msb.app.management.system.bansos.model.PackageDaoImpl;
+import com.msb.app.management.system.bansos.model.PackageEntity;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author difaagh
@@ -34,6 +41,21 @@ public class EditPackage extends javax.swing.JFrame {
      */
     public EditPackage() {
         initComponents();
+    }
+
+    public void render() {
+        PackageDaoImpl packageService = new PackageDaoImpl();
+        PackageEntity pkg = null;
+        try {
+            pkg = packageService.getById(this.id);
+            if(pkg != null){
+                this.fieldName.setText(pkg.getName());
+                this.fieldAmount.setText(pkg.getPrice());
+                this.fieldQuantity.setText(String.valueOf(pkg.getQty()));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());;
+        }
     }
 
     /**
@@ -79,8 +101,18 @@ public class EditPackage extends javax.swing.JFrame {
         packageQtyLabel.setText("Quantity");
 
         cancelButton.setText("Cancel");
+        cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelButtonMouseClicked(evt);
+            }
+        });
 
         saveButton.setText("Save");
+        saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -150,6 +182,29 @@ public class EditPackage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldNameActionPerformed
 
+    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
+        PackageDaoImpl packageService = new PackageDaoImpl();
+        PackageEntity pkg = new PackageEntity();
+        pkg.setId(this.id);
+        pkg.setName(this.fieldName.getText());
+        pkg.setPrice(this.fieldAmount.getText());
+        pkg.setEventId(this.eventId);
+        pkg.setQty(Integer.parseInt(this.fieldQuantity.getText()));
+        try {
+            packageService.update(pkg);
+            this.detail.renderTablePkg();
+            this.setVisible(false);
+            this.dispose();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }//GEN-LAST:event_saveButtonMouseClicked
+
+    private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -185,6 +240,15 @@ public class EditPackage extends javax.swing.JFrame {
         });
     }
 
+    public void setState(EventDetail event, int id, int eventId) {
+        this.detail = event;
+        this.id = id;
+        this.eventId = eventId;
+    }
+
+    private int id;
+    private EventDetail detail;
+    private int eventId;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField fieldAmount;

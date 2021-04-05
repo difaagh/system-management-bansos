@@ -129,7 +129,7 @@ public class Login extends javax.swing.JFrame {
                 menu.setUsername(userName);
                 menu.setRole("admin");
                 this.setVisible(false);
-                this.dispose();
+               this.dispose();
                 menu.setVisible(true);
                 return;
             }
