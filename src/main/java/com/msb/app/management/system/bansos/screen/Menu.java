@@ -234,6 +234,8 @@ public class Menu extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         sMenu3 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
+        sMenu4 = new javax.swing.JLabel();
+        jSeparator4 = new javax.swing.JSeparator();
         header = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         username = new javax.swing.JLabel();
@@ -319,6 +321,22 @@ public class Menu extends javax.swing.JFrame {
 
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
 
+        sMenu4.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
+        sMenu4.setText("User");
+        sMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sMenu4MouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                sMenu4MouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                sMenu4MouseEntered(evt);
+            }
+        });
+
+        jSeparator4.setForeground(new java.awt.Color(0, 0, 0));
+
         javax.swing.GroupLayout subMenuLayout = new javax.swing.GroupLayout(subMenu);
         subMenu.setLayout(subMenuLayout);
         subMenuLayout.setHorizontalGroup(
@@ -331,7 +349,9 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(sMenu2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                     .addComponent(jSeparator2)
                     .addComponent(sMenu3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
-                    .addComponent(jSeparator3))
+                    .addComponent(jSeparator3)
+                    .addComponent(sMenu4, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                    .addComponent(jSeparator4))
                 .addContainerGap())
         );
         subMenuLayout.setVerticalGroup(
@@ -349,7 +369,11 @@ public class Menu extends javax.swing.JFrame {
                 .addComponent(sMenu3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(529, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sMenu4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(472, Short.MAX_VALUE))
         );
 
         header.setBackground(new java.awt.Color(255, 204, 102));
@@ -853,6 +877,19 @@ public class Menu extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_tableEventMouseClicked
 
+    private void sMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sMenu4MouseClicked
+
+    private void sMenu4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseExited
+        sMenu4.setBackground(new Color(255, 204, 51));
+    }//GEN-LAST:event_sMenu4MouseExited
+
+    private void sMenu4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseEntered
+        sMenu4.setBackground(Color.WHITE);
+        sMenu4.setOpaque(true);
+    }//GEN-LAST:event_sMenu4MouseEntered
+
     /**
      * @param args the command line arguments
      */
@@ -915,6 +952,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JLayeredPane layer;
     private javax.swing.JPanel menu1;
     private javax.swing.JPanel menu2;
@@ -922,6 +960,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel sMenu1;
     private javax.swing.JLabel sMenu2;
     private javax.swing.JLabel sMenu3;
+    private javax.swing.JLabel sMenu4;
     private javax.swing.JButton saveCash;
     private javax.swing.JLabel startLabel;
     private javax.swing.JLabel startValue;
