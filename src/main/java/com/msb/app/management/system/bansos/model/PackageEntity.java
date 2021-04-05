@@ -65,7 +65,7 @@ public class PackageEntity {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     @Column(name = "price")
     private String price;
 
@@ -86,5 +86,16 @@ public class PackageEntity {
 
     public void setEventId(int eventId) {
         this.eventId = eventId;
+    }
+
+    @Column(name = "qty")
+    private int qty;
+
+    public int getQty() {
+        return this.qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 }

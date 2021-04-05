@@ -5,9 +5,9 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
-import com.msb.app.management.system.bansos.helper.KeycloakService;
-import java.awt.HeadlessException;
-import java.io.IOException;
+import com.msb.app.management.system.bansos.model.UserEntity;
+import com.msb.app.management.system.bansos.service.user.UserDaoImpl;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -116,11 +116,16 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameFieldActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        KeycloakService security = new KeycloakService();
+
+        UserDaoImpl userService = new UserDaoImpl();
+        UserEntity user = new UserEntity();
         try {
-            int statusLogin = security.login(this.usernameField.getText(), this.passwordField.getPassword());
-            if (statusLogin == 200) {
+            String status = userService.login(this.usernameField.getText(), String.valueOf(this.passwordField.getPassword()));
+            if (!status.equals("false")) {
                 Menu menu = new Menu();
+                String userName = this.usernameField.getText().length() > 0 ? this.usernameField.getText() : "anonymous";
+                menu.setUsername(userName);
+                menu.setRole(status);
                 this.setVisible(false);
                 this.dispose();
                 menu.setVisible(true);
@@ -128,7 +133,7 @@ public class Login extends javax.swing.JFrame {
             }
             JOptionPane.showMessageDialog(this, "Invalid username or password");
 
-        } catch (IOException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
 

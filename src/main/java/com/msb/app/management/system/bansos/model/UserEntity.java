@@ -39,8 +39,8 @@ import org.hibernate.annotations.GenericGenerator;
  * @author difaagh
  */
 @Entity
-@Table(name = "event")
-public class EventEntity {
+@Table(name = "user")
+public class UserEntity {
 
     @Id
     @GeneratedValue(generator = "incrementator")
@@ -54,6 +54,7 @@ public class EventEntity {
     public void setId(int id) {
         this.id = id;
     }
+    
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
@@ -67,49 +68,39 @@ public class EventEntity {
         this.createdDate = new Date();
     }
 
-    @Column(name = "name")
-    private String name;
-
-    public String getName() {
-        return this.name;
+    @Column(name = "username")
+    private String username;
+    
+    public String getUsername(){
+        return this.username;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    
+    
+    public void setUsername(String username){
+        this.username = username;
     }
-    @Column(name = "amount")
-    private String amount;
-
-    public String getAmount() {
-        return this.amount;
+    
+    @Column(name = "password")
+    private String password;
+    
+    public String getPassword(){
+        return this.password;
     }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
+    
+    
+    public void setPassword(String password){
+      this.password = password;
     }
-
-    @Column(name = "start_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date startDate;
-
-    public Date getStartDate() {
-        return this.startDate;
+    
+    @Column(name = "role")
+    private String role;
+    
+    public String getRole(){
+        return this.role;
     }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    
+    public void setRole(String role){
+        this.role = role;
     }
-
-    @Column(name = "end_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date endDate;
-
-    public Date getEndDate() {
-        return this.endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
 }
+

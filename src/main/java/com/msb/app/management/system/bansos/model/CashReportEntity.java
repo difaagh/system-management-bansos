@@ -33,14 +33,16 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  *
  * @author difaagh
  */
+
 @Entity
-@Table(name = "event")
-public class EventEntity {
+@Table(name = "cash_report")
+public class CashReportEntity {
 
     @Id
     @GeneratedValue(generator = "incrementator")
@@ -54,6 +56,7 @@ public class EventEntity {
     public void setId(int id) {
         this.id = id;
     }
+    
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
@@ -67,49 +70,60 @@ public class EventEntity {
         this.createdDate = new Date();
     }
 
-    @Column(name = "name")
-    private String name;
-
-    public String getName() {
-        return this.name;
+    @Column(name = "transaction")
+    private String transaction;
+    
+    public String getTransaction(){
+        return this.transaction;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    
+    
+    public void setTransaction(String cash){
+        this.transaction = cash;
     }
-    @Column(name = "amount")
-    private String amount;
-
-    public String getAmount() {
-        return this.amount;
+    
+    @Column(name = "type")
+    private String type;
+    
+    public String getType(){
+        return this.type;
     }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
+    
+    
+    public void setType(String type){     
+        this.type = type;
     }
-
-    @Column(name = "start_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date startDate;
-
-    public Date getStartDate() {
-        return this.startDate;
+    
+    @Column(name = "prev_cash")
+    private String prevCash;
+    
+    public String getPrevCash(){
+        return this.prevCash;
     }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    
+    public void setPrevCash(String prevCash){
+        this.prevCash = prevCash;
     }
-
-    @Column(name = "end_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date endDate;
-
-    public Date getEndDate() {
-        return this.endDate;
+    
+    @Column(name = "after_cash")
+    private String afterCash;
+    
+    public String getAfterCash(){
+        return this.afterCash;
     }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    
+    public void setAfterCash(String afterCash){
+        this.afterCash = afterCash;
     }
-
+    
+     @Column(name = "user")
+    private String user;
+    
+    public String getUser(){
+        return this.user;
+    }
+    
+    public void setUser(String user){
+        this.user = user;
+    }
 }

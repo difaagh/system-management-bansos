@@ -21,25 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.msb.app.management.system.bansos.service.event;
+package com.msb.app.management.system.bansos.service.cash;
 
-import com.msb.app.management.system.bansos.model.EventEntity;
-import java.util.Collection;
 import java.sql.SQLException;
-import java.util.Date;
+import com.msb.app.management.system.bansos.model.CashReportEntity;
+import java.util.Collection;
 
 /**
  *
  * @author difaagh
  */
-
-
-public interface EventDao {
-    public void create(EventEntity event) throws SQLException;
-    public void update(EventEntity event) throws SQLException;
-    public EventEntity getById(int event_id) throws SQLException;
+public interface CashReportDao {
+    public void create(CashReportEntity cash)throws SQLException;
     public Collection getAll() throws SQLException;
-    public void delete(EventEntity event) throws SQLException;
-    public EventEntity getLatest() throws SQLException;
-    public EventEntity getByStartDate(Date date) throws SQLException;
 }

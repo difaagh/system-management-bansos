@@ -23,6 +23,9 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
+import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
+import java.util.ArrayList;
+
 /**
  *
  * @author difaagh
@@ -34,6 +37,10 @@ public class AddReceiver extends javax.swing.JFrame {
      */
     public AddReceiver() {
         initComponents();
+    }
+
+    public void setCreateEvent(CreateEvent createEvent) {
+        this.createEvent = createEvent;
     }
 
     /**
@@ -48,9 +55,9 @@ public class AddReceiver extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         receiverNameLabel = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        fieldName = new javax.swing.JTextField();
         receiverCodeLabel = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        fieldCode = new javax.swing.JTextField();
         generateCdButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
@@ -69,10 +76,25 @@ public class AddReceiver extends javax.swing.JFrame {
         receiverCodeLabel.setText("Code");
 
         generateCdButton.setText("Generate Code");
+        generateCdButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                generateCdButtonMouseClicked(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
+        cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelButtonMouseClicked(evt);
+            }
+        });
 
         saveButton.setText("Save");
+        saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -91,8 +113,8 @@ public class AddReceiver extends javax.swing.JFrame {
                             .addComponent(receiverCodeLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField1)
+                            .addComponent(fieldCode)
+                            .addComponent(fieldName)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(cancelButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
@@ -109,11 +131,11 @@ public class AddReceiver extends javax.swing.JFrame {
                 .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(receiverNameLabel)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(receiverCodeLabel)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(generateCdButton))
                 .addGap(72, 72, 72)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -135,6 +157,28 @@ public class AddReceiver extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonMouseClicked
+
+    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
+        ArrayList<String> data = new ArrayList();
+        data.add(fieldName.getText());
+        data.add(fieldCode.getText());
+        this.createEvent.clearDataTableReceiver();
+        this.createEvent.setDataTableReceiver(data);
+        this.createEvent.lastRowReceiver += 1;
+        this.createEvent.renderTableReceiver();
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_saveButtonMouseClicked
+
+    private void generateCdButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_generateCdButtonMouseClicked
+        String code = NanoIdUtils.randomNanoId();
+        this.fieldCode.setText(code);
+    }//GEN-LAST:event_generateCdButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -171,13 +215,14 @@ public class AddReceiver extends javax.swing.JFrame {
         });
     }
 
+    private CreateEvent createEvent;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    private javax.swing.JTextField fieldCode;
+    private javax.swing.JTextField fieldName;
     private javax.swing.JButton generateCdButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel receiverCodeLabel;
     private javax.swing.JLabel receiverNameLabel;
     private javax.swing.JButton saveButton;

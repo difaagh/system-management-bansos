@@ -51,6 +51,8 @@ public class HibernateSessionFactory {
                     .addAnnotatedClass(com.msb.app.management.system.bansos.model.EventEntity.class)
                     .addAnnotatedClass(com.msb.app.management.system.bansos.model.CashEntity.class)
                     .addAnnotatedClass(com.msb.app.management.system.bansos.model.PackageEntity.class)
+                    .addAnnotatedClass(com.msb.app.management.system.bansos.model.CashReportEntity.class)
+                    .addAnnotatedClass(com.msb.app.management.system.bansos.model.UserEntity.class)
                     .addAnnotatedClass(com.msb.app.management.system.bansos.model.ReceiverEntity.class);
             serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(config.getProperties()).build();

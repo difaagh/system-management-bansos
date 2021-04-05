@@ -23,6 +23,8 @@
  */
 package com.msb.app.management.system.bansos.screen;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author difaagh
@@ -34,6 +36,10 @@ public class AddPackage extends javax.swing.JFrame {
      */
     public AddPackage() {
         initComponents();
+    }
+    
+    public void setCreateEvent(CreateEvent createEvent){
+        this.createEvent = createEvent;
     }
 
     /**
@@ -73,8 +79,18 @@ public class AddPackage extends javax.swing.JFrame {
         packageQtyLabel.setText("Quantity");
 
         cancelButton.setText("Cancel");
+        cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelButtonMouseClicked(evt);
+            }
+        });
 
         saveButton.setText("Save");
+        saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -145,6 +161,24 @@ public class AddPackage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
+        ArrayList<String> data = new ArrayList();
+        data.add(fieldName.getText());
+        data.add(fieldAmount.getText());
+        data.add(fieldQuantity.getText());
+        this.createEvent.clearDataTablePkg();
+        this.createEvent.setDataTablePkg(data);
+        this.createEvent.lastRowPkg += 1;
+        this.createEvent.renderTablePkg();
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_saveButtonMouseClicked
+
+    private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
+        this.setVisible(false);
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -179,7 +213,8 @@ public class AddPackage extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    private CreateEvent createEvent;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField fieldAmount;

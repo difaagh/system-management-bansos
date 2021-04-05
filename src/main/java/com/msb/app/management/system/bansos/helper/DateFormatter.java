@@ -21,25 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.msb.app.management.system.bansos.service.event;
+package com.msb.app.management.system.bansos.helper;
 
-import com.msb.app.management.system.bansos.model.EventEntity;
-import java.util.Collection;
-import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author difaagh
  */
-
-
-public interface EventDao {
-    public void create(EventEntity event) throws SQLException;
-    public void update(EventEntity event) throws SQLException;
-    public EventEntity getById(int event_id) throws SQLException;
-    public Collection getAll() throws SQLException;
-    public void delete(EventEntity event) throws SQLException;
-    public EventEntity getLatest() throws SQLException;
-    public EventEntity getByStartDate(Date date) throws SQLException;
+public class DateFormatter {
+    private SimpleDateFormat changeFormat;
+    private SimpleDateFormat formatter;
+    
+    public DateFormatter(){
+        this.changeFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+    }
+    public Date parse(String date){
+        Date dates = null;
+        try {
+             dates = this.formatter.parse(date);
+            return dates;
+        } catch (ParseException ex) {
+            Logger.getLogger(DateFormatter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dates;
+    }
+    
+    public String format(Date date){
+        String dates = this.changeFormat.format(date);
+        return dates;
+    }
 }

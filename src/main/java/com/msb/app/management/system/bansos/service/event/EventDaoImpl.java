@@ -23,19 +23,20 @@
  */
 package com.msb.app.management.system.bansos.service.event;
 
+import com.msb.app.management.system.bansos.helper.DateFormatter;
 import com.msb.app.management.system.bansos.helper.HibernateSessionFactory;
 import com.msb.app.management.system.bansos.model.EventEntity;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.Session;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.Order;
-
 /**
  *
  * @author difaagh
@@ -132,12 +133,35 @@ public class EventDaoImpl implements EventDao {
     public EventEntity getLatest() throws SQLException {
         Session session = null;
         EventEntity event = null;
-        Date now = new Date();
+        long millis=System.currentTimeMillis(); 
+        Date dateNow = new Date(millis);
         try {
             List listEvent = new ArrayList<EventEntity>();
             session = HibernateSessionFactory.getSessionFactory().openSession();
             session.beginTransaction();
-            listEvent = session.createCriteria(EventEntity.class).add(Restrictions.lt("startDate", now)).add(Restrictions.gt("endDate", now)).addOrder(Order.asc("startDate")).list();
+            listEvent = session.createCriteria(EventEntity.class).add(Restrictions.gt("endDate", dateNow)).add(Restrictions.or(Restrictions.lt("startDate", dateNow), Restrictions.eq("startDate", dateNow))).list();
+            System.out.println("list event " + dateNow);
+            event = listEvent.isEmpty() ? null : (EventEntity) listEvent.get(0);
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+
+        }
+        return event;
+    }
+
+    @Override
+    public EventEntity getByStartDate(java.util.Date date) throws SQLException {
+        Session session = null;
+        EventEntity event = null;
+        try {
+            List listEvent = new ArrayList<EventEntity>();
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            session.beginTransaction();
+            listEvent = session.createCriteria(EventEntity.class).add(Restrictions.eq("startDate", date)).list();
             event = listEvent.isEmpty() ? null : (EventEntity) listEvent.get(0);
         } catch (HibernateException e) {
             e.printStackTrace();

@@ -58,8 +58,8 @@
                           </Group>
                           <EmptySpace pref="62" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jTextField2" max="32767" attributes="0"/>
-                              <Component id="jTextField1" max="32767" attributes="0"/>
+                              <Component id="fieldCode" max="32767" attributes="0"/>
+                              <Component id="fieldName" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="91" max="32767" attributes="0"/>
@@ -82,12 +82,12 @@
                   <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="receiverNameLabel" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextField1" min="-2" max="-2" attributes="0"/>
+                      <Component id="fieldName" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="receiverCodeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="fieldCode" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="generateCdButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
@@ -117,7 +117,7 @@
             <Property name="text" type="java.lang.String" value="Name"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField1">
+        <Component class="javax.swing.JTextField" name="fieldName">
         </Component>
         <Component class="javax.swing.JLabel" name="receiverCodeLabel">
           <Properties>
@@ -127,22 +127,31 @@
             <Property name="text" type="java.lang.String" value="Code"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField2">
+        <Component class="javax.swing.JTextField" name="fieldCode">
         </Component>
         <Component class="javax.swing.JButton" name="generateCdButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Generate Code"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="generateCdButtonMouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="cancelButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cancel"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cancelButtonMouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="saveButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Save"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="saveButtonMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
