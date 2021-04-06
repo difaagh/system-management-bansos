@@ -49,6 +49,7 @@ public class CashReportDaoImpl implements CashReportDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -65,6 +66,7 @@ public class CashReportDaoImpl implements CashReportDao {
             cash = session.createCriteria(CashReportEntity.class).addOrder(Order.desc("createdDate")).list();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

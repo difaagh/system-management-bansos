@@ -50,7 +50,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -68,7 +68,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -86,7 +86,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             Hibernate.initialize(receiver);
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -104,7 +104,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             listReceiver = session.createCriteria(ReceiverEntity.class).add(Restrictions.eq("eventId", event_id)).list();
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -123,7 +123,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -141,7 +141,7 @@ public class ReceiverDaoImpl implements ReceiverDao {
             Hibernate.initialize(receiver);
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

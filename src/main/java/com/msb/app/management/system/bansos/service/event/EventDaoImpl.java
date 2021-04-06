@@ -23,10 +23,8 @@
  */
 package com.msb.app.management.system.bansos.service.event;
 
-import com.msb.app.management.system.bansos.helper.DateFormatter;
 import com.msb.app.management.system.bansos.helper.HibernateSessionFactory;
 import com.msb.app.management.system.bansos.model.EventEntity;
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.Session;
 import java.sql.SQLException;
@@ -35,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.sql.Date;
 import java.util.List;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 /**
  *
@@ -53,6 +50,7 @@ public class EventDaoImpl implements EventDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -70,6 +68,7 @@ public class EventDaoImpl implements EventDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -86,6 +85,7 @@ public class EventDaoImpl implements EventDao {
             event = session.get(EventEntity.class, id);
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -103,6 +103,7 @@ public class EventDaoImpl implements EventDao {
             listEvent = session.createCriteria(EventEntity.class).list();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -121,6 +122,7 @@ public class EventDaoImpl implements EventDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -143,6 +145,7 @@ public class EventDaoImpl implements EventDao {
             event = listEvent.isEmpty() ? null : (EventEntity) listEvent.get(0);
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -164,6 +167,7 @@ public class EventDaoImpl implements EventDao {
             event = listEvent.isEmpty() ? null : (EventEntity) listEvent.get(0);
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

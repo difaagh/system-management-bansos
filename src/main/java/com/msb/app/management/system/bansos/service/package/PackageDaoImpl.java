@@ -49,6 +49,7 @@ public class PackageDaoImpl implements PackageDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -66,6 +67,7 @@ public class PackageDaoImpl implements PackageDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -83,6 +85,7 @@ public class PackageDaoImpl implements PackageDao {
             Hibernate.initialize(pkg);
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -100,6 +103,7 @@ public class PackageDaoImpl implements PackageDao {
             listPkg = session.createCriteria(PackageEntity.class).add(Restrictions.eq("eventId", event_id)).list();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -118,6 +122,7 @@ public class PackageDaoImpl implements PackageDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

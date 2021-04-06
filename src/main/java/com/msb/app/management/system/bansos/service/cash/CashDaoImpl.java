@@ -48,6 +48,7 @@ public class CashDaoImpl implements CashDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -65,6 +66,7 @@ public class CashDaoImpl implements CashDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -81,6 +83,7 @@ public class CashDaoImpl implements CashDao {
             cash = session.createCriteria(CashEntity.class).list();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -99,6 +102,7 @@ public class CashDaoImpl implements CashDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

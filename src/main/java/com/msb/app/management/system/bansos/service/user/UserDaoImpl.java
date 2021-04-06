@@ -48,6 +48,7 @@ public class UserDaoImpl implements UserDao {
             userList = session.createCriteria(UserEntity.class).list();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -66,6 +67,7 @@ public class UserDaoImpl implements UserDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -83,7 +85,7 @@ public class UserDaoImpl implements UserDao {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -109,7 +111,7 @@ public class UserDaoImpl implements UserDao {
             return toReturn;
         } catch (HibernateException e) {
             e.printStackTrace();
-            throw new SQLException(e);
+            throw new SQLException(e.getMessage());
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
