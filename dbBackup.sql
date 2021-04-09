@@ -72,6 +72,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO test.`user`
+INSERT INTO `user`
 (id, username, password, `role`, created_date)
 VALUES(1, 'admin', 'admin', 'admin', '2020-01-01 00:00:00.0');
