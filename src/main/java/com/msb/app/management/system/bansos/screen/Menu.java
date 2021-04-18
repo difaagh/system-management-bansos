@@ -311,11 +311,11 @@ public class Menu extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 sMenu3MouseClicked(evt);
             }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                sMenu3MouseExited(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 sMenu3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                sMenu3MouseExited(evt);
             }
         });
 
@@ -698,7 +698,7 @@ public class Menu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 801, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
         );
 
         pack();
@@ -778,7 +778,7 @@ public class Menu extends javax.swing.JFrame {
         try {
             Collection<CashEntity> cashCheck = null;
             cashCheck = (Collection<CashEntity>) cashService.getAll();
-            System.out.println(cashCheck);
+            System.out.println("cek tur"+cashCheck);
             if (cashCheck.size() == 0) {
                 CashEntity cash = new CashEntity();
                 cash.setTotalAmount(String.valueOf(total));
@@ -879,6 +879,9 @@ public class Menu extends javax.swing.JFrame {
 
     private void sMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseClicked
         // TODO add your handling code here:
+        User userScreen = new User();
+        userScreen.setVisible(true);
+        
     }//GEN-LAST:event_sMenu4MouseClicked
 
     private void sMenu4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseExited
