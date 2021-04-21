@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2021 difaagh.
+ * Copyright 2021 mac.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,21 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.msb.app.management.system.bansos.service.user;
-
-import com.msb.app.management.system.bansos.model.UserEntity;
-import java.sql.SQLException;
-import java.util.Collection;
+package com.msb.app.management.system.bansos.model;
 
 /**
  *
- * @author difaagh
+ * @author mac
  */
-public interface UserDao {
-    public Collection getAll() throws SQLException;
-    public void update(UserEntity user) throws SQLException;
-    public void create(UserEntity user) throws SQLException;
-    public String login(String username, String password)throws SQLException;
-    public Collection searchByUsername(String username) throws SQLException;
-    public void delete(UserEntity user) throws SQLException;
+public class test {
+
+    public int getCek() {
+        return cek;
+    }
+
+    public void setCek(int cek) {
+        this.cek = cek;
+    }
+
+    public String getCekk() {
+        return cekk;
+    }
+
+    public void setCekk(String cekk) {
+        this.cekk = cekk;
+    }
+
+    private int cek;
+    private String cekk;
 }

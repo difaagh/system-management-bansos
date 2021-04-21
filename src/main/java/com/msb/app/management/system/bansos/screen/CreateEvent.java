@@ -267,6 +267,11 @@ public class CreateEvent extends javax.swing.JFrame {
                 AddReceiverButtonMouseClicked(evt);
             }
         });
+        AddReceiverButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddReceiverButtonActionPerformed(evt);
+            }
+        });
 
         saveEvent.setText("Save");
         saveEvent.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -324,18 +329,17 @@ public class CreateEvent extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AddReceiverButton)
-                            .addComponent(AddPackageButton))
+                            .addComponent(AddPackageButton)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(AddReceiverButton)
+                                .addGap(79, 79, 79)
+                                .addComponent(saveEvent)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(465, 465, 465)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveEvent)
-                .addGap(460, 460, 460))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(233, 233, 233)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -409,12 +413,12 @@ public class CreateEvent extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(24, 24, 24)
-                        .addComponent(AddReceiverButton)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(AddReceiverButton)
+                            .addComponent(saveEvent))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(saveEvent)
-                        .addGap(55, 55, 55))
+                        .addGap(102, 102, 102))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -600,6 +604,10 @@ public class CreateEvent extends javax.swing.JFrame {
     private void AddPackageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddPackageButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_AddPackageButtonActionPerformed
+
+    private void AddReceiverButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddReceiverButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AddReceiverButtonActionPerformed
 
     private void disableAddPkgAndReceiver() {
         this.AddPackageButton.setVisible(false);

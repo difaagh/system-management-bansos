@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -59,7 +60,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void update(UserEntity user) throws SQLException {
-          Session session = null;
+        Session session = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
             session.beginTransaction();
@@ -77,7 +78,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void create(UserEntity user) throws SQLException {
-       Session session = null;
+        Session session = null;
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
             session.beginTransaction();
@@ -97,18 +98,54 @@ public class UserDaoImpl implements UserDao {
     public String login(String username, String password) throws SQLException {
         Session session = null;
         ArrayList<UserEntity> userList = new ArrayList();
-        
+
         try {
             session = HibernateSessionFactory.getSessionFactory().openSession();
             session.beginTransaction();
-            userList = (ArrayList<UserEntity>) session.createCriteria(UserEntity.class).add(Restrictions.eq("username",username)).add(Restrictions.eq("password", password)).list();
-            if(userList.size() == 0){
+            userList = (ArrayList<UserEntity>) session.createCriteria(UserEntity.class).add(Restrictions.eq("username", username)).add(Restrictions.eq("password", password)).list();
+            if (userList.size() == 0) {
                 String toReturn = "false";
                 return toReturn;
             }
             UserEntity user = userList.get(0);
             String toReturn = user.getRole();
             return toReturn;
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
+
+    @Override
+    public Collection searchByUsername(String username) throws SQLException {
+        Session session = null;
+        List userList = new ArrayList<UserEntity>();
+        try {
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            userList = session.createCriteria(UserEntity.class).add(Restrictions.like("username", username,MatchMode.START)).list();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return userList;
+    }
+
+    @Override
+    public void delete(UserEntity user) throws SQLException {
+        Session session = null;
+        try {
+            session = HibernateSessionFactory.getSessionFactory().openSession();
+            session.beginTransaction();
+            session.delete(user);
+            session.getTransaction().commit();
         } catch (HibernateException e) {
             e.printStackTrace();
             throw new SQLException(e.getMessage());

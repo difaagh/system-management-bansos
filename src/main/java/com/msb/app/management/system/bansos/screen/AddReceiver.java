@@ -99,6 +99,11 @@ public class AddReceiver extends javax.swing.JFrame {
                 saveButtonMouseClicked(evt);
             }
         });
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -220,6 +225,10 @@ public class AddReceiver extends javax.swing.JFrame {
         String code = NanoIdUtils.randomNanoId();
         this.fieldCode.setText(code);
     }//GEN-LAST:event_generateCdButtonMouseClicked
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
      * @param args the command line arguments

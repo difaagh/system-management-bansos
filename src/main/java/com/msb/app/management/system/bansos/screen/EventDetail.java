@@ -39,7 +39,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-
 /**
  *
  * @author difaagh
@@ -117,6 +116,12 @@ public class EventDetail extends javax.swing.JFrame {
 
     }
 
+    private void clearTablePkg() {
+        DefaultTableModel newTableModel = (DefaultTableModel) this.packageTable.getModel();
+        newTableModel.setRowCount(0);
+        this.packageTable.setModel(newTableModel);
+    }
+
     public void renderTablePkg() {
         this.tablePkgCanAction = false;
         PackageDaoImpl pkgService = new PackageDaoImpl();
@@ -140,6 +145,12 @@ public class EventDetail extends javax.swing.JFrame {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
+    }
+
+    private void clearTableReceiver() {
+        DefaultTableModel newTableModel = (DefaultTableModel) this.receiverTable.getModel();
+        newTableModel.setRowCount(0);
+        this.receiverTable.setModel(newTableModel);
     }
 
     public void renderTableReceiver() {
@@ -563,6 +574,7 @@ public class EventDetail extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 } finally {
+                    this.clearTablePkg();
                     this.renderTablePkg();
                 }
             }
@@ -591,6 +603,7 @@ public class EventDetail extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 } finally {
+                    this.clearTableReceiver();
                     this.renderTableReceiver();
                 }
             }
