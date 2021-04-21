@@ -36,4 +36,6 @@ public interface UserDao {
     public void update(UserEntity user) throws SQLException;
     public void create(UserEntity user) throws SQLException;
     public String login(String username, String password)throws SQLException;
+    public Collection searchByUsername(String username) throws SQLException;
+    public void delete(UserEntity user) throws SQLException;
 }
