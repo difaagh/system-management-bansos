@@ -35,9 +35,9 @@
             <version>4.9.1</version>
         </dependency>
         <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>java-dotenv</artifactId>
-            <version>5.2.2</version>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.28</version>
         </dependency>
         <dependency>
             <groupId>org.clojure</groupId>
@@ -78,6 +78,11 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>2.7.2</version>
         </dependency>
         <dependency>
             <groupId>net.java.dev.swing-layout</groupId>

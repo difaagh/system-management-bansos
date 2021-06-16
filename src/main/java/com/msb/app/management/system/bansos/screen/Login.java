@@ -7,7 +7,12 @@ package com.msb.app.management.system.bansos.screen;
 
 import com.msb.app.management.system.bansos.model.UserEntity;
 import com.msb.app.management.system.bansos.service.user.UserDaoImpl;
-import io.github.cdimascio.dotenv.Dotenv;
+import org.yaml.snakeyaml.Yaml;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -117,19 +122,24 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameFieldActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-
+         if(this.usernameField.getText().length() == 0 || this.passwordField.getPassword().length == 0){
+             JOptionPane.showMessageDialog(this, "Username or Password cannot be empty!");
+             return;
+         }
         UserDaoImpl userService = new UserDaoImpl();
         UserEntity user = new UserEntity();
         try {
-            Dotenv dotenv = Dotenv.load();
-            String dev = dotenv.get("JAVA_ENV");
+            Yaml yaml = new Yaml();
+            InputStream inputStream = new FileInputStream(new File("settings.yaml"));
+            HashMap env = yaml.load(inputStream);
+            String dev = (String) env.get("JAVA_ENV");
             if ("development".equals(dev)) {
                 Menu menu = new Menu();
                 String userName = this.usernameField.getText().length() > 0 ? this.usernameField.getText() : "anonymous";
                 menu.setUsername(userName);
                 menu.setRole("admin");
                 this.setVisible(false);
-               this.dispose();
+                this.dispose();
                 menu.setVisible(true);
                 return;
             }
@@ -147,6 +157,10 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Invalid username or password");
 
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (Throwable e){
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
 

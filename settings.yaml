@@ -1,0 +1,7 @@
+DB_USE: MARIADB
+DB_NAME: test
+DB_USERNAME: root
+DB_PASSWORD: root
+DB_PORT: 3303
+JAVA_ENV: prod
+DB_LOG: false

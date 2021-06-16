@@ -55,6 +55,7 @@ public class Menu extends javax.swing.JFrame {
         column2.setMinWidth(0);
         column2.setMaxWidth(0);
         column2.setPreferredWidth(0);
+        loadMenu1();
     }
 
     public void setUsername(String username) {
@@ -103,6 +104,31 @@ public class Menu extends javax.swing.JFrame {
         this.rpLabel.setVisible(false);
     }
 
+    private void showLabelStartedEvent(boolean param) {
+        if (!param) {
+            this.eventLabel.setVisible(false);
+            this.eventValue.setVisible(false);
+            this.noStartLabel.setVisible(true);
+            this.amountLabel.setVisible(false);
+            this.amountValue.setVisible(false);
+            this.startLabel.setVisible(false);
+            this.startValue.setVisible(false);
+            this.endLabel.setVisible(false);
+            this.endValue.setVisible(false);
+        } else {
+            this.eventLabel.setVisible(true);
+            this.eventValue.setVisible(true);
+            this.noStartLabel.setVisible(false);
+            this.noStartLabel.setVisible(true);
+            this.amountLabel.setVisible(true);
+            this.amountValue.setVisible(true);
+            this.startLabel.setVisible(true);
+            this.startValue.setVisible(true);
+            this.endLabel.setVisible(true);
+            this.endValue.setVisible(true);
+        }
+    }
+
     private void loadMenu1() {
         EventEntity event = null;
         if (!isLoadMenu1) {
@@ -115,9 +141,10 @@ public class Menu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage());
         } finally {
             if (event == null) {
+                this.showLabelStartedEvent(false);
                 return;
             }
-
+            this.showLabelStartedEvent(true);
             SimpleDateFormat changeFormat = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date startTmp = null;
             java.util.Date endTmp = null;
@@ -243,7 +270,7 @@ public class Menu extends javax.swing.JFrame {
         menu1 = new javax.swing.JPanel();
         eventLabel = new javax.swing.JLabel();
         startLabel = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        endLabel = new javax.swing.JLabel();
         eventValue = new javax.swing.JLabel();
         startValue = new javax.swing.JLabel();
         endValue = new javax.swing.JLabel();
@@ -251,6 +278,7 @@ public class Menu extends javax.swing.JFrame {
         amountLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableReceiver = new javax.swing.JTable();
+        noStartLabel = new javax.swing.JLabel();
         menu2 = new javax.swing.JPanel();
         cashLabel = new javax.swing.JLabel();
         rpLabel = new javax.swing.JLabel();
@@ -409,7 +437,7 @@ public class Menu extends javax.swing.JFrame {
 
         startLabel.setText("Start            :");
 
-        jLabel2.setText("End              :");
+        endLabel.setText("End              :");
 
         eventValue.setText("null");
 
@@ -448,6 +476,9 @@ public class Menu extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tableReceiver);
 
+        noStartLabel.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        noStartLabel.setText("No Started Event");
+
         javax.swing.GroupLayout menu1Layout = new javax.swing.GroupLayout(menu1);
         menu1.setLayout(menu1Layout);
         menu1Layout.setHorizontalGroup(
@@ -457,14 +488,18 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(eventLabel)
                     .addComponent(startLabel)
-                    .addComponent(jLabel2)
+                    .addComponent(endLabel)
                     .addComponent(amountLabel))
                 .addGap(19, 19, 19)
                 .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(amountValue)
-                    .addComponent(endValue)
-                    .addComponent(startValue)
-                    .addComponent(eventValue))
+                    .addGroup(menu1Layout.createSequentialGroup()
+                        .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(endValue)
+                            .addComponent(startValue)
+                            .addComponent(eventValue))
+                        .addGap(245, 245, 245)
+                        .addComponent(noStartLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(menu1Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1191, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -473,18 +508,23 @@ public class Menu extends javax.swing.JFrame {
         menu1Layout.setVerticalGroup(
             menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menu1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eventLabel)
-                    .addComponent(eventValue))
-                .addGap(26, 26, 26)
-                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(startLabel)
-                    .addComponent(startValue))
-                .addGap(18, 18, 18)
-                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(endValue))
+                .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menu1Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(eventLabel)
+                            .addComponent(eventValue))
+                        .addGap(26, 26, 26)
+                        .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(startLabel)
+                            .addComponent(startValue))
+                        .addGap(18, 18, 18)
+                        .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(endLabel)
+                            .addComponent(endValue)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menu1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(noStartLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(26, 26, 26)
                 .addGroup(menu1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(amountValue)
@@ -698,7 +738,7 @@ public class Menu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 801, Short.MAX_VALUE)
         );
 
         pack();
@@ -778,7 +818,7 @@ public class Menu extends javax.swing.JFrame {
         try {
             Collection<CashEntity> cashCheck = null;
             cashCheck = (Collection<CashEntity>) cashService.getAll();
-            System.out.println("cek tur"+cashCheck);
+            System.out.println("cek tur" + cashCheck);
             if (cashCheck.size() == 0) {
                 CashEntity cash = new CashEntity();
                 cash.setTotalAmount(String.valueOf(total));
@@ -867,21 +907,21 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_createEventButtonMouseClicked
 
     private void tableEventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEventMouseClicked
-       if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
-        int row = tableEvent.rowAtPoint(evt.getPoint());
-        String id = (String) this.tableEvent.getValueAt(row, 5);
-        EventDetail eventDetail = new EventDetail();
-        eventDetail.setEvent(id, this.role, this.cashValue.getText());
-        eventDetail.renderAll();
-        eventDetail.setVisible(true);
-       }
+        if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
+            int row = tableEvent.rowAtPoint(evt.getPoint());
+            String id = (String) this.tableEvent.getValueAt(row, 5);
+            EventDetail eventDetail = new EventDetail();
+            eventDetail.setEvent(id, this.role, this.cashValue.getText());
+            eventDetail.renderAll();
+            eventDetail.setVisible(true);
+        }
     }//GEN-LAST:event_tableEventMouseClicked
 
     private void sMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseClicked
         // TODO add your handling code here:
         User userScreen = new User();
         userScreen.setVisible(true);
-        
+
     }//GEN-LAST:event_sMenu4MouseClicked
 
     private void sMenu4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sMenu4MouseExited
@@ -943,12 +983,12 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel cashLabel;
     private javax.swing.JLabel cashValue;
     private javax.swing.JButton createEventButton;
+    private javax.swing.JLabel endLabel;
     private javax.swing.JLabel endValue;
     private javax.swing.JLabel eventLabel;
     private javax.swing.JLabel eventValue;
     private javax.swing.JPanel header;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
@@ -959,6 +999,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLayeredPane layer;
     private javax.swing.JPanel menu1;
     private javax.swing.JPanel menu2;
+    private javax.swing.JLabel noStartLabel;
     private javax.swing.JLabel rpLabel;
     private javax.swing.JLabel sMenu1;
     private javax.swing.JLabel sMenu2;

@@ -308,15 +308,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="eventLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="startLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="endLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="amountLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="amountValue" min="-2" max="-2" attributes="0"/>
-                              <Component id="endValue" min="-2" max="-2" attributes="0"/>
-                              <Component id="startValue" min="-2" max="-2" attributes="0"/>
-                              <Component id="eventValue" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="endValue" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="startValue" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="eventValue" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="245" max="-2" attributes="0"/>
+                                  <Component id="noStartLabel" min="-2" pref="205" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -329,20 +335,28 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="eventLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="eventValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="startLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="startValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="endValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="eventLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="eventValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="startLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="startValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="endLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="endValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                                  <Component id="noStartLabel" min="-2" pref="84" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -366,7 +380,7 @@
                     <Property name="text" type="java.lang.String" value="Start            :"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel2">
+                <Component class="javax.swing.JLabel" name="endLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="End              :"/>
                   </Properties>
@@ -421,6 +435,14 @@
                     </Component>
                   </SubComponents>
                 </Container>
+                <Component class="javax.swing.JLabel" name="noStartLabel">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Lucida Grande" size="24" style="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="No Started Event"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="menu2">
